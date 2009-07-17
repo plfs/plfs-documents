@@ -6,7 +6,7 @@ set ylabel "Write Bandwidth (MB/s)"
 set xrange [0:*]
 set yrange [0:*]
 
-set terminal postscript enhanced 20 eps
+set terminal postscript enhanced 32 eps
 set output "lustre.eps"
 plot '2.dat' index 2 t "N-N Lustre", \
     '' index 1 t "N-1 PLFS", \
@@ -16,7 +16,7 @@ set terminal png giant
 plot '2.dat' index 2 with linespoints lw 3 t "N-N Lustre", \
     '' index 1 with linespoints lw 3 t "N-1 PLFS", \
     '' index 0 with linespoints lw 3 t "N-1 Lustre"
-set terminal postscript enhanced 20 eps
+set terminal postscript enhanced 32 eps
 
 set key top right
 set output "lustre-motivation.eps"
@@ -29,4 +29,4 @@ set key top left
 set terminal png giant
 plot '2.dat' index 2 using 1:2 lw 3 t "N-N", \
     '' index 0 using 1:2 lw 3 t "N-1"
-set terminal postscript enhanced 20 eps
+set terminal postscript enhanced 32 eps

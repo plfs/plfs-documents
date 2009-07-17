@@ -4,9 +4,10 @@ set style data linespoints
 set xlabel "Number of Processors" 
 set ylabel "Bandwidth (MB/s)" 
 #set grid y
-set terminal postscript enhanced 20 eps
+set terminal postscript enhanced 32 eps
 set xrange [7:2048]
 set yrange [0:*]
+set xtics 8,4,2048
 
 set output "flash_ckpt.eps"
 #set title "FLASH-IO (HDF5) on LANL's RRZ for Checkpoint File" 
@@ -23,7 +24,7 @@ plot 'plfs.dat' using 1:($12/$5) t "With PLFS" lw 3 lt 1, \
     '' using 1:($12/$5):($12/($5+$6)):($12/($5-$6)) with errorbars lt 1 not, \
     'panfs.dat' using 1:($12/$5) t "Without PLFS" lw 3 lt 2, \
     '' using 1:($12/$5):($12/($5+$6)):($12/($5-$6)) with errorbars lt 2 not
-set terminal postscript enhanced 20 eps
+set terminal postscript enhanced 32 eps
 set xrange [7:2048]
 
 set output "flash_ckpt_without_open.eps"

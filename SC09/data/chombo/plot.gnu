@@ -5,7 +5,7 @@ set style data linespoints
 set xlabel "Number of Processors" 
 set ylabel "Bandwidth (MB/s)" 
 #set grid y
-set terminal postscript enhanced 20 eps 
+set terminal postscript enhanced 32 eps 
 set output "chombo.eps"
 set xrange [7:590]
 plot 'plfs.dat' using 1:($4/$15) t "With PLFS" lt 1, \
@@ -19,6 +19,6 @@ plot 'plfs.dat' using 1:($4/$15) t "With PLFS" lt 1, \
     '' using 1:($4/$15):($4/($15+$16)):($4/($15-$16)) with errorbars lt 2 not, \
     'panfs.concurrent.dat' using 1:($4/$15) t "PanFS, CW hint" lt 3, \
     '' using 1:($4/$15):($4/($15+$16)):($4/($15-$16)) with errorbars lt 3 not
-set terminal postscript color enhanced 20
+set terminal postscript color enhanced 32
 set output "chombo.concurrent.ps"
 replot

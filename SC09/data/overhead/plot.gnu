@@ -2,7 +2,7 @@ set style data yerrorlines
 set key inside left top 
 set xlabel "Number of Processors" 
 set ylabel "Write Bandwidth (MB/s)" 
-set terminal postscript enhanced 20 eps
+set terminal postscript enhanced 32 eps
 
 set output 'gpfs.eps'
 plot 'gpfst.dat' index 6 t "GPFS, N-N", \
@@ -15,7 +15,7 @@ set output 'gpfs.png'
 set terminal png giant
 replot
 
-set terminal postscript enhanced 20 eps
+set terminal postscript enhanced 32 eps
 set yrange [0:*]
 set key right top Left
 set logscale x 2

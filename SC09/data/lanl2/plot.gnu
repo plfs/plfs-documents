@@ -4,7 +4,7 @@ set style data yerrorlines
 set xlabel "Number of Processes" 
 set ylabel "Write Bandwidth (MB/s)" 
 set yrange [ 0.00000 : * ] noreverse nowriteback  # (currently [:10.0000] )
-set terminal postscript enhanced 20 eps
+set terminal postscript enhanced 32 eps
 set key top left
 set output "lanl2_full.eps"
 plot 'data.plfs.nocb.nods.async_close' using 1:($4/$7):($5/$7) \

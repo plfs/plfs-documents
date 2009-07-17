@@ -2,7 +2,7 @@ set style data yerrorlines
 set key inside left top 
 set xlabel "Number of Processors" 
 set ylabel "Write Bandwidth (MB/s)" 
-set terminal postscript enhanced 20 eps
+set terminal postscript enhanced 32 eps
 
 set output 'gpfs.eps'
 plot '1.dat' index 2 t 'N-N, GPFS', \
@@ -14,7 +14,7 @@ plot '1.dat' index 2 lw 3 t 'N-N, GPFS', \
      '' index 1 lw 3 t 'N-1, PLFS', \
      '' index 0 lw 3 t 'N-1, GPFS'
 
-set terminal postscript enhanced 20 eps
+set terminal postscript enhanced 32 eps
 
 set output 'gpfs-motivation.eps'
 plot '1.dat' index 2 t 'N-N', \

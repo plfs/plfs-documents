@@ -1,5 +1,5 @@
 #!/opt/local/bin/gnuplot -persist
-set terminal postscript enhanced 20 eps
+set terminal postscript enhanced 32 eps
 set bar 1.000000
 set boxwidth 0.7 absolute
 set style fill pattern 
