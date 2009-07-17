@@ -1,4 +1,4 @@
-set terminal postscript enhanced 32 eps
+set terminal postscript enhanced 24 eps
 set style data linespoints
 set logscale y 10
 set xrange [0:650]
