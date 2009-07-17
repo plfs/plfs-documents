@@ -1,0 +1,93 @@
+This output comes from running Crestone/Scripts/Parse.pl and pulling data from
+it.  PLFS2 is the version that does the close in the flush and not the release.
+That's why PLFS is so much better than PLFS2.
+
+Here's a dump of what it looks like:
+
+ PLFS: bulkio:  64 Procs:   14 dumps:    29250 MBs:  194.21 MB/s
+ PLFS: bulkio:  64 Procs:   18 dumps:    37610 MBs:  194.57 MB/s
+PanFS: bulkio:  64 Procs:   21 dumps:    43880 MBs:  197.57 MB/s
+PanFS: mpi-io:  64 Procs:    1 dumps:     2080 MBs:   37.55 MB/s
+ PLFS: bulkio:  64 Procs:    2 dumps:     4170 MBs:  187.84 MB/s
+ PLFS: mpi-io:  64 Procs:   21 dumps:    43880 MBs: 1096.73 MB/s
+PanFS: mpi-io:  64 Procs:   21 dumps:    43880 MBs:   34.49 MB/s
+ PLFS: mpi-io:  64 Procs:   21 dumps:    43880 MBs: 1143.30 MB/s
+PanFS: mpi-io:  64 Procs:   21 dumps:    43880 MBs:   33.82 MB/s
+ PLFS: mpi-io:  64 Procs:   21 dumps:    43880 MBs: 1147.79 MB/s
+PanFS: mpi-io:  64 Procs:    5 dumps:    10440 MBs:   35.55 MB/s
+ PLFS: mpi-io:  64 Procs:   21 dumps:    43880 MBs: 1230.51 MB/s
+ PLFS: mpi-io:  64 Procs:   21 dumps:    43880 MBs: 1128.60 MB/s
+ PLFS: bulkio:  64 Procs:   21 dumps:    43880 MBs:  188.33 MB/s
+ PLFS: bulkio:  64 Procs:   21 dumps:    43880 MBs:  188.73 MB/s
+PanFS: mpi-io:  64 Procs:   21 dumps:    43880 MBs:   31.50 MB/s
+PanFS: mpi-io:  64 Procs:   21 dumps:    43880 MBs:   34.65 MB/s
+PanFS: bulkio:  64 Procs:   21 dumps:    43880 MBs:  193.83 MB/s
+PanFS: bulkio:  64 Procs:    3 dumps:     6260 MBs:  196.86 MB/s
+ PLFS: mpi-io:  64 Procs:   19 dumps:    39700 MBs:  588.15 MB/s
+PanFS: mpi-io:  64 Procs:    1 dumps:     2080 MBs:   35.19 MB/s
+PLFS2: mpi-io:  64 Procs:   21 dumps:    43880 MBs:  612.68 MB/s
+PLFS2: bulkio:  64 Procs:   21 dumps:    43880 MBs:  190.45 MB/s
+PanFS: mpi-io:  64 Procs:   21 dumps:    43880 MBs:   32.14 MB/s
+PanFS: bulkio:  64 Procs:   21 dumps:    43880 MBs:  195.84 MB/s
+PLFS2: mpi-io:  64 Procs:   21 dumps:    43880 MBs:  619.95 MB/s
+PLFS2: bulkio:  64 Procs:   21 dumps:    43880 MBs:  187.47 MB/s
+PanFS: mpi-io:  64 Procs:   21 dumps:    43880 MBs:   31.75 MB/s
+PanFS: bulkio:  64 Procs:   21 dumps:    43880 MBs:  194.44 MB/s
+PLFS2: mpi-io:  64 Procs:   21 dumps:    43880 MBs:  582.19 MB/s
+PLFS2: bulkio:  64 Procs:   21 dumps:    43880 MBs:  190.03 MB/s
+PanFS: mpi-io:  64 Procs:   21 dumps:    43880 MBs:   30.98 MB/s
+PanFS: bulkio:  64 Procs:   21 dumps:    43880 MBs:  189.38 MB/s
+PLFS2: mpi-io:  64 Procs:   21 dumps:    43880 MBs:  610.55 MB/s
+PLFS2: bulkio:  64 Procs:   21 dumps:    43880 MBs:  190.41 MB/s
+PanFS: mpi-io:  64 Procs:   21 dumps:    43880 MBs:   34.69 MB/s
+PanFS: bulkio:  64 Procs:   21 dumps:    43880 MBs:  193.58 MB/s
+PLFS2: mpi-io:  64 Procs:   21 dumps:    43880 MBs:  585.69 MB/s
+PLFS2: bulkio:  64 Procs:   21 dumps:    43880 MBs:  187.47 MB/s
+PanFS: mpi-io:  64 Procs:   21 dumps:    43880 MBs:   31.09 MB/s
+PanFS: bulkio:  64 Procs:   11 dumps:    22980 MBs:  196.41 MB/s
+PanFS: mpi-io: 512 Procs:    4 dumps:    66700 MBs:   89.77 MB/s
+PLFS2: mpi-io:  64 Procs:   21 dumps:    43880 MBs:  611.40 MB/s
+PLFS2: bulkio:  64 Procs:   21 dumps:    43880 MBs:  188.25 MB/s
+PanFS: bulkio:  64 Procs:    2 dumps:     4170 MBs:  201.45 MB/s
+PanFS: mpi-io: 512 Procs:    4 dumps:    66700 MBs:   87.65 MB/s
+PanFS: mpi-io: 512 Procs:    3 dumps:    50000 MBs:   86.51 MB/s
+PLFS2: mpi-io: 512 Procs:   14 dumps:   233700 MBs:  925.91 MB/s
+PanFS: mpi-io: 512 Procs:    4 dumps:    66700 MBs:   88.58 MB/s
+PanFS: bulkio:   8 Procs:   21 dumps:     5490 MBs:  108.18 MB/s
+PanFS: mpi-io:   8 Procs:   19 dumps:     4966 MBs:   10.30 MB/s
+PanFS: bulkio:  16 Procs:   21 dumps:    10989 MBs:  124.92 MB/s
+PanFS: mpi-io:  16 Procs:   16 dumps:     8369 MBs:   17.54 MB/s
+PanFS: bulkio: 128 Procs:   14 dumps:    58460 MBs:  262.98 MB/s
+PanFS: mpi-io: 128 Procs:    7 dumps:    29200 MBs:   45.67 MB/s
+PLFS2: bulkio:   8 Procs:   21 dumps:     5490 MBs:  107.35 MB/s
+PLFS2: mpi-io:   8 Procs:   21 dumps:     5490 MBs:  125.14 MB/s
+PLFS2: bulkio:  16 Procs:   21 dumps:    10989 MBs:  107.30 MB/s
+PLFS2: mpi-io:  16 Procs:   21 dumps:    10989 MBs:  238.42 MB/s
+PLFS2: bulkio: 128 Procs:   21 dumps:    87720 MBs:  179.86 MB/s
+PLFS2: mpi-io: 128 Procs:   17 dumps:    71000 MBs:  630.94 MB/s
+PanFS: bulkio:   8 Procs:    2 dumps:      521 MBs:  114.76 MB/s
+PanFS: mpi-io: 512 Procs:    4 dumps:    66700 MBs:   90.38 MB/s
+PLFS2: mpi-io: 512 Procs:   14 dumps:   233700 MBs:  905.11 MB/s
+PanFS: mpi-io: 512 Procs:    4 dumps:    66700 MBs:   89.77 MB/s
+PLFS2: mpi-io: 512 Procs:   12 dumps:   200300 MBs:  895.80 MB/s
+---------------------------- TOTALS ----------------------------
+ PLFS: bulkio:  64 Procs:   76 dumps:   158790 MBs:  190.94 MB/s
+ PLFS: mpi-io:  64 Procs:  124 dumps:   259100 MBs: 1001.70 MB/s
+PLFS2: bulkio:   8 Procs:   21 dumps:     5490 MBs:  107.35 MB/s
+PLFS2: bulkio:  16 Procs:   21 dumps:    10989 MBs:  107.30 MB/s
+PLFS2: bulkio:  64 Procs:  126 dumps:   263280 MBs:  189.00 MB/s
+PLFS2: bulkio: 128 Procs:   21 dumps:    87720 MBs:  179.86 MB/s
+PLFS2: mpi-io:   8 Procs:   21 dumps:     5490 MBs:  125.14 MB/s
+PLFS2: mpi-io:  16 Procs:   21 dumps:    10989 MBs:  238.42 MB/s
+PLFS2: mpi-io:  64 Procs:  126 dumps:   263280 MBs:  603.40 MB/s
+PLFS2: mpi-io: 128 Procs:   17 dumps:    71000 MBs:  630.94 MB/s
+PLFS2: mpi-io: 512 Procs:   40 dumps:   667700 MBs:  909.43 MB/s
+PanFS: bulkio:   8 Procs:   23 dumps:     6011 MBs:  108.72 MB/s
+PanFS: bulkio:  16 Procs:   21 dumps:    10989 MBs:  124.92 MB/s
+PanFS: bulkio:  64 Procs:  142 dumps:   296690 MBs:  194.41 MB/s
+PanFS: bulkio: 128 Procs:   14 dumps:    58460 MBs:  262.98 MB/s
+PanFS: mpi-io:   8 Procs:   19 dumps:     4966 MBs:   10.30 MB/s
+PanFS: mpi-io:  16 Procs:   16 dumps:     8369 MBs:   17.54 MB/s
+PanFS: mpi-io:  64 Procs:  196 dumps:   409520 MBs:   32.82 MB/s
+PanFS: mpi-io: 128 Procs:    7 dumps:    29200 MBs:   45.67 MB/s
+PanFS: mpi-io: 512 Procs:   23 dumps:   383500 MBs:   88.86 MB/s

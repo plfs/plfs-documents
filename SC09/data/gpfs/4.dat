@@ -1,0 +1,65 @@
+# SELECT write_total_time_max,hints,mpihome,mpihost,obj_size,total_size_mb,test_type,strided,target,write_file_close_wait_time_max,num_hosts FROM experiment WHERE  !isnull(write_file_close_wait_time_max) && system rlike 'gpfst' && isnull(error) && user like 'johnbents' && obj_size=47001 && isnull(user_error) (1239077479)
+# xpoint ypoint ydev
+# N-1, strided, GPFS yaxis 1
+1 0.00126696 0
+2 0.0406399 0
+3 0.0730379 0
+4 0.00211906 0
+5 0.0536292 0
+6 0.0350299 0
+7 0.0534692 0
+8 0.09615305 0.06528095
+12 0.0443599 0
+16 0.0121791 0
+20 0.073811 0
+24 0.0288389 0
+28 0.0225289 0
+32 0.0742919 0
+36 0.0986409 0
+
+
+# N-1, strided, GPFS yaxis 2
+
+
+# N-1, strided, PLFS yaxis 1
+1 0.044867 0
+2 0.052089 0
+3 0.048671 0
+4 0.054903 0
+5 0.051686 0
+6 0.054208 0
+7 0.054945 0
+8 0.0851057181818182 0.146224803818167
+12 0.0851181 0
+16 0.0645809 0
+20 0.144117 0
+24 0.0824502 0
+28 0.110602 0
+32 0.0881419 0
+36 0.082963 0
+
+
+# N-1, strided, PLFS yaxis 2
+
+
+# N-N, GPFS yaxis 1
+1 0.00135207 0
+2 0.00187898 0
+3 0.0857129 0
+4 0.00302792 0
+5 0.00118208 0
+6 0.00146699 0
+7 0.0872409 0
+8 0.0329348156666667 0.076818163746394
+12 0.0907319 0
+16 0.115364 0
+20 0.166713 0
+24 0.173758 0
+28 0.118064 0
+32 0.140406 0
+36 0.389256 0
+
+
+# N-N, GPFS yaxis 2
+
+

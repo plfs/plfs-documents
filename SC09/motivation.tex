@@ -1,0 +1,140 @@
+\section{Background}
+\label{motivation}
+
+% Why do we care about checkpointing
+For large parallel simulations which can run for several months, restarting a
+calculation from the beginning is not viable, since the mean time to interrupt
+for today's supercomputers is measured in days or hours and not
+months~\cite{google-failure,schroeder-failure}.  As a result, applications 
+periodically save
+the current state of their computation to persistent storage.  Later, after a
+failure is encountered, the application can restart from the last saved
+checkpoint. 
+
+% N-N compared to N-1
+
+\scribble{Lots of tweaking of final sentence} 
+From a file system perspective,
+there are two basic checkpointing patterns: ~\Term{N-N} and ~\Term{N-1}.  An
+N-N checkpoint is one in which each of ~\Math{N} processes writes to a unique
+file, for a total of ~\Math{N} files written.  An N-1 checkpoint differs in
+that all of ~\Math{N} processes write to a single shared file.  Applications
+using N-N checkpoints usually write sequentially to each file, an access
+pattern ideally suited to parallel file systems. Conversely, applications using
+N-1 checkpoint files typically organize the collected state of all N processes
+in some application specific, canonical order, often resulting in 
+small, unaligned, interspersed writes.
+
+Some N-1 checkpoint files are logically the equivalent of concatenating the
+files of an N-N checkpoint (\ie\ each process has its own unique region
+within the shared file).  This is referred to as an ~\Term{N-1 segmented}
+checkpoint file and is extremely rare in practice.  More common is an
+~\Term{N-1 strided} checkpoint file in which the processes write multiple small
+regions at many different offsets within the file; these offsets are typically
+not aligned with file system block boundaries~\cite{plfs-maps}.  N-1 strided
+checkpointing applications often make roughly synchronous progress such that
+all the processes tend to write to the same region within the file concurrently, and collectively this region sweeps across the file.
+These three patterns, N-N, N-1 segmented, and N-1 strided, are
+illustrated in Figure~\ref{fig-patterns}.  Since N-1 segmented is a rare pattern
+in practice, hereafter we consider only N-1 strided and we refer to it with the
+shorthand N-1. 
+
+\input{patterns-fig}
+\scribble{Should probably explain or remove 'false sharing' in figure}
+\scribble{If those Argonne graphs were decipherable in B-W, I'd like to include
+two of them to visualize the difference between strided and non.}
+
+% file system challenges for N-N and N-1
+The file system challenge for an N-N workload is the concurrent creation of
+thousands of files which are typically within a single directory.  An N-1
+workload can be even more challenging however for several different reasons
+which may depend on the particular parallel file system or the underlying
+\RAID\ protection scheme.  In the Panasas ActiveScale parallel
+file system~\cite{Welch04managingscalability} (PanFS), for example, small strided
+writes within a parity stripe must serialize in order to maintain consistent
+parity.  In the Lustre parallel file system~\cite{lustre}, writes to N-1
+checkpoint files which are not aligned on file system block boundaries cause
+serious performance slowdowns as well~\cite{nersc}.  Although both
+N-N and N-1 patterns pose challenges, it has been our observation, as well
+as that of many others~\cite{grider-hec,adios,nersc,zest,Thakur99datasieving},
+that the challenges of N-1 checkpointing are more difficult. 
+Applications using N-1 patterns consistently achieve significantly less
+bandwidth than do those using an N-N pattern. 
+
+
+Figure~\ref{fig-motivation} presents experimental data validating this discrepancy: An N-1 checkpoint pattern receives
+only a small fraction of the bandwidth achieved by an N-N pattern on PanFS,
+GPFS, and Lustre and does not scale with increased numbers of nodes.  The 
+PanFS experiment, run on LANL's Roadrunner
+supercomputer, shows a maximum observed N-N bandwidth of 31~\GBs\ compared
+to a maximum observed N-1 bandwidth of less than 100~\MBs. 
+Although we show PanFS results
+using their default RAID-5 configuration, PanFS has also a RAID-10
+configuration which reduces the implicit sharing caused by N-1 patterns when
+two writers both need to update the same parity.  While this solution improves
+scaling and offers much higher N-1 write bandwidth without sacrificing
+reliability, it does so by writing every byte twice, a scheme that, at best,
+can achieve only approximately half of the write bandwidth of N-N on RAID-5.
+\plfs, however, as will be shown in Section~\ref{eval}, can get much closer.
+
+The GPFS and Lustre experiments were run on much smaller systems. The GPFS
+experiment was run using an archive attached to Roadrunner using its 
+nine, quad-core, file transfer nodes.  The Lustre experiment was run using five
+client machines, each with eight cores, and twelve Lustre servers.  All three
+file systems exhibit similar behavior; N-N bandwidths are consistently higher
+than N-1 by at least an order of magnitude.
+
+% why all applications not N-N
+Since N-N checkpointing derives higher bandwidth than N-1, the obvious path to
+faster checkpointing is for application developers to rewrite existing N-1
+checkpointing applications to do N-N checkpointing instead.  Additionally, all
+new applications should be written to take advantage of the higher bandwidth
+available to N-N checkpointing.  Although some developers have gone this route,
+many continue to prefer an N-1 pattern even though its disadvantages are well
+understood.  There are several advantages to N-1 checkpointing that appeal to
+parallel application developers.  One, a single file is much easier to manage
+and to archive.  Two, N-1 files usually organize data into an application
+specific canonical order that commonly aggregates related data together in
+contiguous regions, making visualization of intermediate state simple and
+efficient.  Additionally, following a failure, a restart on a different number
+of compute nodes is easier to code as the checkpoint format is independent of
+the number of processes that captured the checkpoint; conversely, gathering the
+appropriate regions from multiple files or from multiple regions within a
+single file is more complicated.  
+
+\input{motivation-graphs}
+
+% a list of some apps that do N-1
+
+Essentially these developers have once again shifted complexity to the parallel
+file system for their own convenience.  This is not unreasonable; it has long
+been the province of computer systems to make computing more convenient for its
+users.  Many important applications have made this choice.  Of the twenty-three
+applications listed on the Parallel I/O Benchmarks page~\cite{pio-benchmarks},
+at least ten have an N-1 pattern; two major applications at LANL use an N-1
+checkpointing pattern as do at least two of the eight applications chosen to
+run on Roadrunner during its initial stabilization phase.  N-1 checkpointing is
+very important to these applications.  For example, at the core of one of
+LANL's N-1 applications is a twenty-year old Fortran checkpointing library. 
+About a decade ago, in response to a growing clamor about the
+limitations of N-1 checkpointing bandwidth, developers for this application
+augmented their checkpointing library with fifteen thousand lines of code.
+However, instead of changing the application to write an N-N pattern, they
+added a prefer to the IO routiones in which interprocess communication is used to aggregate and buffer writes.
+Although they did not improve the performance to match that of other 
+applications using an N-N checkpoint pattern, 
+this effort was considered a success as they did improve the N-1
+performance by a factor of two to three. This new checkpointing library,
+called \Term{bulkio}, has been maintained over the past decade and ported to
+each new successive supercomputer at LANL~\cite{bent-personal-bulk}. 
+Furthermore, N-1 patterns continue to be developed anew in many new
+applications.  High level data formatting libraries such as Parallel
+NetCDF~\cite{pnetcdf} and HDF5~\cite{hdf5} offer convenience to application
+developers who simply describes the logical format of their data and need no
+longer consider how that data is physically organized in the file system.  Once
+again this convenience merely shifts the complexity to the \upfs\ 
+since these libraries use an N-1 pattern.
+
+
+% Milo's change which I didn't like
+%More generally, parallel application developers employ data formatting libraries such as NetCDF~\cite{pnetcdf} and HDF5~\cite{hdf5} to simplify programming, but these extra layers of mapping can lead to decreased locality and sequentiality when checkpointing a logically related set of variables. N-1 write access patterns can appear in new applications this way.

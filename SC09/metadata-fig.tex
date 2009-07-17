@@ -1,0 +1,16 @@
+\begin{SCfigure}
+    \centering
+    \includegraphics[width=0.4\textwidth]{data/stat/stat.eps}
+    \mycaption{fig-metadata}{Metadata Queries.}{
+        This graph compares the time to \syscall{stat} a 20~\GB\ file
+        on \plfs\ with the time to \syscall{stat} a comparable
+        file on PanFS.    
+        The \yaxis, which is in logscale,
+        shows the \syscall{stat} time 
+        as a function of the number of writers who created that
+        file.  We compare the PanFS \syscall{stat} rate to the
+        \plfs\ rate for files opened for writing, and to the 
+        \plfs\ rate for closed files.
+        \vspace{1cm}
+    }
+\end{SCfigure}

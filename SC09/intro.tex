@@ -1,0 +1,55 @@
+\section{Introduction}
+
+\scribble{Need to define "its class" --Milo}
+% computers are large, they have failures
+In June 2008, Los Alamos National Labs (LANL), in partnership with IBM, broke
+the petaflop barrier and claimed the top spot on the Top 500 list~\cite{top500}
+with the Roadrunner supercomputer~\cite{roadrunner}.  Due to its unique hybrid
+architecture, Roadrunner has only 3060 nodes, which is a relatively small
+number for a supercomputer of its class.  Unfortunately, even at this size,
+component failures are a frequent event.  These failures are particularly
+problematic as many applications at LANL, and other High Performance Computing
+(HPC) sites, have long run times in excess of days, weeks, and even months.
+
+% checkpoint is defense against failure, drives parallel file systems, is
+% challengin
+Typically these applications protect themselves against failure by periodically
+\Term{checkpointing} their progress by saving the state of the application to
+persistent storage. After a failure the application can then restart from the most recent 
+checkpoint.  Due to the difficulty of reconstructing a consistent
+image from multiple asynchronous checkpoints~\cite{lamport1978}, HPC
+applications checkpoint synchronously (\ie\ following a barrier).  Synchronous
+checkpointing, however, does not eliminate the complexity; it merely shifts it to
+the parallel file system which now must coordinate simultaneous access from
+thousands of compute nodes.  Even using optimal checkpoint frequencies~\cite{daly-optimal}, 
+checkpointing has become the driving workload for
+parallel file systems and the challenge it imposes grows with each successively
+larger supercomputer~\cite{pcl:99:me,schroeder2007}.  The difficulty of this
+challenge can vary greatly depending on the particular pattern of checkpointing
+chosen by the application. 
+
+% our approach
+In this paper, we describe different checkpointing patterns, and show how some
+result in very poor storage performance on three of the major HPC
+parallel file systems: PanFS, GPFS, and Lustre.  We then posit that an
+interposition layer inserted into the existing storage stack can rearrange this
+problematic access pattern to achieve much better performance from the
+\upfs.  To test this hypothesis, we have developed \plfs, a Parallel
+Log-structured File System, which is one such interposition layer.  We present measurements using \plfs\ on several synthetic benchmarks and real applications at multiple HPC supercomputing centers.  The
+results confirm our hypothesis: writing to the \upfs\ through
+\plfs\ improves checkpoint bandwidth for all tested applications and
+benchmarks and on all three studied parallel file systems; in some cases,
+bandwidth is raised by several orders of magnitude.
+
+\input{summary-fig}
+
+As we shall discuss, and is summarized in Figure~\ref{fig-page1}, PLFS is
+already showing very large speed ups for widely used HPC benchmarks and
+important real HPC codes, and at extreme scale. 
+
+% the stupid mandatory list of the rest of the paper
+The rest of the paper is organized as follows.  We present more detailed background and
+motivation in Section~\ref{motivation}, describe our design in
+Section~\ref{arch} and our evaluation in Section~\ref{eval}.  We present
+related work in Section~\ref{related}, current status and future work in
+Section~\ref{future}, and finally we conclude in Section~\ref{conclude}.

@@ -1,0 +1,92 @@
+From johnbent  Wed Dec  3 00:11:01 2008
+Return-Path: <ggrider@lanl.gov>
+Received: from ccn-mail.lanl.gov [128.165.4.105]
+	by tangerine.lanl.gov with IMAP (fetchmail-6.3.8)
+	for <johnbent@localhost> (single-drop); Wed, 03 Dec 2008 00:11:01 -0700 (MST)
+Received: from ccn-mail.lanl.gov ([unix socket])
+	 by ccn-mail.lanl.gov (Cyrus v2.2.12-CCN-5-RPM-2.2.12-4.lanl) with LMTPA;
+	 Tue, 02 Dec 2008 22:58:39 -0700
+X-Sieve: CMU Sieve 2.2
+Received: from cic-mail.lanl.gov (cic-mail.lanl.gov [128.165.4.115])
+	by ccn-mail.lanl.gov (Postfix) with ESMTP id A62411D0003;
+	Tue,  2 Dec 2008 22:58:37 -0700 (MST)
+Received: from [128.165.253.165] (vpn-client-165.lanl.gov [128.165.253.165])
+	by cic-mail.lanl.gov (Postfix) with ESMTP id 4DCE9208003;
+	Tue,  2 Dec 2008 22:58:34 -0700 (MST)
+Message-ID: <49362009.7050301@lanl.gov>
+Date: Tue, 02 Dec 2008 22:58:33 -0700
+From: Gary Grider <ggrider@lanl.gov>
+User-Agent: Thunderbird 1.4 (Windows/20050908)
+MIME-Version: 1.0
+To: john Bent <johnbent@lanl.gov>, James Nunez <jnunez@lanl.gov>, 
+ Meghan Wingate Quist <meghan@lanl.gov>,
+ gary Grider <ggrider@lanl.gov>
+Subject: plfs on gpfs
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+X-NIE-2-MailScanner-Information: Please see http://network.lanl.gov/email/virus-scan.php
+X-NIE-2-MailScanner: Found to be clean
+X-NIE-2-MailScanner-From: ggrider@lanl.gov
+X-Spam-Status: No
+
+With gpfs you get  a different N to 1 strided signature (slightly) than 
+panfs
+this would be kind of like having an extremely small depth in panfs
+
+small is bad of course
+and aligned is really pronounced
+if you hit the magic file system block size it runs like gangbusters but 
+if not
+you are at 1/10th or so
+
+of course plfs to the rescue :-) for both small and unaligned
+
+8 nodes gpfs 2 procs/node    file system capable of 1-2 GB/sec N to N
+this is direct san attached with multiple 4 gigabit FC connections with 
+multipathing
+to 2 DS4800 disk arrays each
+dedicated 10GE net for the interconnect (for tokens)
+
+we could probably try nsd on gpfs at some point perhaps
+
+one proc per node until 8 procs then (bynode option in openmpi)
+
+47003 ntoone barrier after open before close
+gpfs 2 procs    24MB/sec
+plfs 2 procs     293 MB/sec
+gpfs 4 procs    13 MB/sec
+plfs 4 procs    759 MB/sec
+gpfs 8 procs    27 MB/sec
+plfs 8 procs       1.24 GB/sec
+gpfs 16 procs     54 MB/sec  
+plfs 16 procs     1.45 GB/sec
+
+
+64k exactly
+gpfs 16 procs  202 MB/sec
+plfs 16 procs  1.45 GB/sec
+
+123003
+gpfs 16 procs   106
+plfs 16 procs  1.45 GB/sec
+
+128k exactly
+gpfs 16 procs  307 MB/sec
+plfs 16 procs   1.6 GB/sec
+
+512k - 16 bytes
+gpfs 16 procs 274 MB/sec
+plfs 16 procs  1.8 GB/sec
+
+512k exactly
+gpfs 16 procs   1.8 GB/sec   (this is the block size for gpfs so it 
+stripes at this block)
+plfs 16 procs   1.8 GB/sec
+
+512k plus 8
+gpfs 16 procs  264 MB/sec
+plfs 16 procs  1.8 GB/sec
+
+
+
+

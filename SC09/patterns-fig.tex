@@ -1,0 +1,30 @@
+\begin{figure}[tb]
+  \centering
+    \fbox{
+        \subfloat[N-N]{\label{fig:nn}
+            \includegraphics[width=0.25\textwidth]{figs/nn-arrows.eps}}
+    }
+    \fbox{
+        \subfloat[N-1 segmented]{\label{fig:n1segmented}
+           \includegraphics[width=0.25\textwidth]{figs/n1nonstrided-arrows.eps}}
+    }
+    \fbox{
+        \subfloat[N-1 strided]{\label{fig:n1strided}
+            \includegraphics[width=0.25\textwidth]{figs/n1strided-arrows.eps}}
+    }
+    \mycaption{fig-patterns}{Common Checkpointing Patterns.}{
+This figure shows the three basic checkpoint patterns: from left to right, N-N,
+N-1 segmented, and N-1 strided.  In each pattern, the parallel application is
+the same, consisting of six processes spread across three compute nodes each of
+which has three blocks of state to checkpoint.  The difference in the three
+patterns is how the application state is logically organized on disk.  In the
+N-N pattern, each process saves its state to a unique file.  N-1 segmented is
+simply the concatenation of the multiple N-N files into a single file.
+Finally, N-1 strided, which also uses a single file as does N-1 segmented, has
+a region for each block instead of a region for each process.  From a parallel
+file system perspective, N-1 strided is the most challenging pattern as it is
+the most likely to cause small, interspersed, and unaligned writes.  Note that
+previous work~\cite{hedges-lunatic} refers to N-N as \Term{file per process}
+and N-1 as \Term{shared file} but shares our segmented and strided terminology.
+}
+\end{figure}

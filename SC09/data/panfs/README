@@ -1,0 +1,4 @@
+I took 2.dat and combined it with rrp3_overhead.dat to get more data
+also, the bad thing about this data is it compares
+PanFS N-1 strided with 10MB IOs to
+PLFS N-1 strided w/ 47K IOs and N-N w/ 47K IOs

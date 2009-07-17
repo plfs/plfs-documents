@@ -1,0 +1,18 @@
+# SELECT write_total_time_max,hints,mpihome,mpihost,obj_size,total_size_mb,test_type,target,read_total_op_time_max,num_ionodes FROM experiment WHERE  !isnull(read_total_op_time_max) && mpihost like 'rrp3' && isnull(error) && isnull(user_error) && ( (user like 'meghan' && date_ts >= 1236973186 && test_type=2 && obj_size=10485760 && strided = 0 && num_ionodes*120<7500) || (mpihost like 'rrp3' && isnull(hints) && (obj_size=1048576) && !isnull(write_total_time_max) && date_ts >= 1237490575 && user like 'johnbent' && num_hosts/num_ionodes>100) || (mpihost like 'rrp3' && isnull(hints) && (obj_size=1048576) && !isnull(write_total_time_max) && date_ts >= 1237490575 && user like 'johnbent' && num_hosts/num_ionodes>100) ) (1238695573)
+# xpoint ypoint ydev
+# N-1, PanFS yaxis 1
+720 5623.38355944686 1063.80974662754
+1440 9071.16092319892 1822.03359230191
+2160 10761.9013849068 333.46435165184
+2880 9253.98837018724 0
+3600 8160.13122148752 0
+4320 13700.7113686094 3489.56702314133
+5040 13210.2262983516 0
+5760 8653.25928884133 0
+6480 7487.31536305549 625.633335565067
+7200 8204.86821394674 1392.41411860774
+
+
+# N-1, PanFS yaxis 2
+
+

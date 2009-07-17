@@ -1,0 +1,51 @@
+\section{Current Status and Future Work}
+\label{future}
+
+\scribble{I removed the 'cute' part of this. Sorry, john}
+We initially developed \plfs\ in order to test our hypothesis that an
+interposition layer could rearrange checkpoint patterns such that the
+convenience of N-1 patterns could be preserved while achieving the bandwidth of
+N-N.  However, after achieving such large improvements with real LANL
+applications, we were compelled to harden it 
+into a production file system. Consisting of about three thousand lines of
+code, \plfs\ is currently a permanent mount point on Roadrunner where several
+applications have begun evaluating whether it is appropriate for their write 
+patterns.
+
+%Since \plfs\ consists of only three thousand
+%source lines of code and is easily ported to all Linux architectures, we
+%decided~\footnotemark that the costs of maintaining it are easily outweighed by
+%the benefits.
+%\footnotetext{were persuaded by management}
+
+Although \plfs\ works transparently with unmodified applications, in practice
+some applications may need to make minor changes.  Applications that open
+\plfs\ files in read-write mode will find that reading from these files can be
+very slow.  As we discussed in Section~\ref{arch-read}, reads in \plfs\ are
+handled by reading and aggregating the index files.  When files are opened in
+write-read mode, this process must be repeated for every \syscall{read} since
+intervening \syscall{writes} may have occurred.  Although the vast majority of
+HPC applications are able to read in read-only mode, we do plan to investigate
+removing this limitation in the future for those few applications who must occasionally
+read while writing.  One possibility is to introduce metadata
+servers which can synchronously maintain an aggregated index in memory. 
+
+Originally intended merely to address N-1 challenges, \plfs\, as currently
+designed, also has the potential to address N-N challenges.  One way that
+\plfs\ can reduce N-N checkpointing times is by reducing disk seeks through its
+use of log-structured writing.  However, we have yet to measure the
+frequency of non-sequential IO within N-N checkpoints.
+
+\scribble{Added gigaplus reference to the end. --Milo}
+Another challenge of an N-N pattern is the
+overwhelming metadata pressure resulting from the simultaneous creation of tens
+of thousands of files within a single directory.  Currently HPC parallel file
+systems do distribute metadata across multiple metadata servers; however they do so
+at the granularity of a \Term{volume} or a directory (\ie\ all files within a
+directory share a single metadata server).  \plfs\ can easily refine this
+granularity by distributing container subdirectories 
+across multiple metadata servers.  At the moment, \plfs\ only creates container
+structures for regular files; directories are simply created directly on the
+\upfs.  By extending \plfs\ to create a similar container structure for
+directories, we believe that \plfs\ can effectively address this N-N challenge
+as well, in a manner similar to~\cite{gigaplus}.

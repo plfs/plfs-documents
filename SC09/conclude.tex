@@ -1,0 +1,17 @@
+\section{Conclusion}
+\label{conclude}
+
+Large systems experience failures.  To protect themselves against these
+failures, parallel applications running on these systems save their progress by
+checkpointing.  Unfortunately for many of these applications, their preferred
+checkpointing patterns are extremely challenging for the \upfs\ and impose
+severe bandwidth limitations.  In this paper, we have developed \plfs\ to
+demonstrate how a simple interposition layer can transparently rearrange these
+challenging patterns and improve checkpoint bandwidth by several orders of
+magnitude.
+
+The parallel file system attached to Roadrunner is the largest LANL has ever
+had; testing it has revealed that the challenges of N-1 patterns are severely
+exacerbated at this scale.  Given current bandwidths, we know of no current N-1
+application at LANL that can effectively checkpoint across the full width of
+Roadrunner.  \plfs\ allows them to do so. 

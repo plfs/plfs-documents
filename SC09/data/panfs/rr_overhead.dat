@@ -1,0 +1,108 @@
+# SELECT write_total_time_max,hints,mpihome,mpihost,obj_size,total_size_mb,test_type,strided,target,obj_size,write_total_op_time_max,num_hosts FROM experiment WHERE  !isnull(write_total_op_time_max) && mpihost like 'rrp3' &&  description rlike 'overhead'  && isnull(user_error) (1239223615)
+# xpoint ypoint ydev
+# N-1, strided, target=/panfs/scratch1/johnbent2/OUT.%s,IO_size=10 MB yaxis 1
+4 114.511933779385 0
+8 245.693096993816 0
+12 354.4421888037 0
+20 580.177641020337 0
+40 965.594398316633 0
+60 1073.87314840323 0
+80 1345.58022820889 0
+100 316.639753881946 0
+200 801.775228980796 0
+300 939.043374060677 0
+
+
+# N-1, strided, target=/panfs/scratch1/johnbent2/OUT.%s,IO_size=10 MB yaxis 2
+
+
+# N-1, strided, target=/mnt/plfs/johnbent2/plfs/OUT.%s,IO_size=46 KB yaxis 1
+740 4142.85346330072 0
+760 4591.1524533125 0
+780 4809.47989360565 0
+800 5217.21519860045 0
+900 6436.82277888396 0
+1000 6807.19675247816 0
+1100 6831.82356620158 0
+1200 7431.80165217486 0
+1300 6621.26940829867 0
+
+
+# N-1, strided, target=/mnt/plfs/johnbent2/plfs/OUT.%s,IO_size=46 KB yaxis 2
+
+
+# N-1, strided, target=/mnt/plfs/johnbent3/plfs/OUT.%s,IO_size=46 KB yaxis 1
+80 1914.93033278319 0
+100 2303.04650274033 0
+200 3664.02248232069 0
+300 3825.1703749229 0
+400 3697.17132037927 0
+500 3781.40746617493 0
+600 3701.94020596409 0
+700 3720.7851235743 0
+
+
+# N-1, strided, target=/mnt/plfs/johnbent3/plfs/OUT.%s,IO_size=46 KB yaxis 2
+
+
+# N-1, strided, target=/panfs/scratch1/johnbent2/OUT.%s,IO_size=46 KB yaxis 1
+4 0.33662041576619 0
+8 2.98110577306966 0
+12 5.30691502393738 0
+20 5.46877116484877 0
+40 5.83979967536324 0
+60 4.96277296404282 0
+80 5.14472928279738 0
+100 8.32952428387243 0
+
+
+# N-1, strided, target=/panfs/scratch1/johnbent2/OUT.%s,IO_size=46 KB yaxis 2
+
+
+# N-1, strided, target=/mnt/plfs/johnbent3/output.%s,IO_size=46 KB yaxis 1
+4 99.4871922945647 2.50189850013548
+8 194.91095839185 1.0629545872096
+20 490.706805193941 1.83113876009992
+40 953.032633548119 0
+60 1371.58342754539 0
+
+
+# N-1, strided, target=/mnt/plfs/johnbent3/output.%s,IO_size=46 KB yaxis 2
+
+
+# N-N, target=/panfs/scratch1/johnbent2/OUT.%s.%r.%r,IO_size=46 KB yaxis 1
+720 4278.15326801772 0
+740 5232.77988716563 146.502397171386
+760 5685.9610909121 62.6552015346219
+780 6782.57181663472 278.024062073708
+800 7166.611991589 297.965892642237
+900 6986.3545791611 123.862249947124
+1000 7380.23984210752 206.326004218478
+1100 7120.42650995831 191.306617689152
+1200 7576.20917845806 117.104701618046
+1300 7431.17442616258 58.5153221542137
+
+
+# N-N, target=/panfs/scratch1/johnbent2/OUT.%s.%r.%r,IO_size=46 KB yaxis 2
+
+
+# N-N, target=/panfs/scratch1/johnbent3/OUT.%s.%r.%r,IO_size=46 KB yaxis 1
+4 374.324236017044 7.89438811446453
+8 749.797090694662 16.4629803479121
+20 1783.87619794995 0
+
+
+# N-N, target=/panfs/scratch1/johnbent3/OUT.%s.%r.%r,IO_size=46 KB yaxis 2
+
+
+# N-N, target=/panfs/scratch1/johnbent3/output.%s.%r,IO_size=46 KB yaxis 1
+4 383.27782806933 7.23485866454604
+8 749.734557387945 9.17111612449753
+20 1831.34029858178 12.094662648164
+40 3308.47350836905 0
+60 3736.69899693277 0
+
+
+# N-N, target=/panfs/scratch1/johnbent3/output.%s.%r,IO_size=46 KB yaxis 2
+
+

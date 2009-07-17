@@ -1,0 +1,49 @@
+# SELECT write_total_time_max,hints,mpihome,mpihost,obj_size,total_size_mb,test_type,target,write_file_open_wait_time_max,num_ionodes FROM experiment WHERE  !isnull(write_file_open_wait_time_max) && mpihost like 'rrp3' && isnull(error) && isnull(user_error) && ( (user like 'meghan' && date_ts >= 1236973186 && test_type=2 && obj_size=10485760 && strided = 0 && num_ionodes*120<7500) || (mpihost like 'rrp3' && isnull(hints) && (obj_size=1048576) && !isnull(write_total_time_max) && date_ts >= 1237490575 && user like 'johnbent' && num_hosts/num_ionodes>100) || (mpihost like 'rrp3' && isnull(hints) && (obj_size=1048576) && !isnull(write_total_time_max) && date_ts >= 1237490575 && user like 'johnbent' && num_hosts/num_ionodes>100) ) (1238695573)
+# xpoint ypoint ydev
+# N-1, PLFS yaxis 1
+720 2.03168 0.45456
+1440 3.35404 0.54760495020488
+2160 3.82913 0.136058435811807
+2880 3.94756 0.218428691847528
+3600 8.34469 0.64073
+4320 12.1297 0
+5040 11.8018 0
+5760 155.308 70.7331
+6480 16.0224 0
+7200 27.6478 0
+
+
+# N-1, PLFS yaxis 2
+
+
+# N-1, PanFS yaxis 1
+720 3.03171 0.96446354468398
+1440 1.3024 0.508805
+2160 4.29388 0.35144
+2880 4.43726 0
+3600 6.31794 0
+4320 9.50491 0.10688
+5040 17.5317 0
+5760 7.34391 0
+6480 14.5799 2.08125
+7200 33.8318 11.83105
+
+
+# N-1, PanFS yaxis 2
+
+
+# N-N, PanFS yaxis 1
+720 1.4206 0.0357099999999999
+1440 3.72984 0.421885781567581
+2160 6.16708 0.657147256066367
+2880 7.84887 0.56019105082304
+3600 10.4366 0.6948
+4320 10.6767 0
+5760 19.0546 1.28865
+6480 18.4053 0
+7200 20.4603 0
+
+
+# N-N, PanFS yaxis 2
+
+

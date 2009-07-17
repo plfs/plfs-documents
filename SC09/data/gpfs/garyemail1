@@ -1,0 +1,102 @@
+From johnbent  Fri Nov 28 23:45:29 2008
+Return-Path: <ggrider@lanl.gov>
+Received: from ccn-mail.lanl.gov [128.165.4.105]
+	by tangerine.lanl.gov with IMAP (fetchmail-6.3.8)
+	for <johnbent@localhost> (single-drop); Fri, 28 Nov 2008 23:45:29 -0700 (MST)
+Received: from ccn-mail.lanl.gov ([unix socket])
+	 by ccn-mail.lanl.gov (Cyrus v2.2.12-CCN-5-RPM-2.2.12-4.lanl) with LMTPA;
+	 Fri, 28 Nov 2008 22:55:08 -0700
+X-Sieve: CMU Sieve 2.2
+Received: from cic-mail.lanl.gov (cic-mail.lanl.gov [128.165.4.115])
+	by ccn-mail.lanl.gov (Postfix) with ESMTP id AD0AB1D0003
+	for <johnbent@ccn-mail.lanl.gov>; Fri, 28 Nov 2008 22:55:08 -0700 (MST)
+Received: from [128.165.253.80] (vpn-client-80.lanl.gov [128.165.253.80])
+	by cic-mail.lanl.gov (Postfix) with ESMTP id 85A4E208002;
+	Fri, 28 Nov 2008 22:55:04 -0700 (MST)
+Message-ID: <4930D937.6090108@lanl.gov>
+Date: Fri, 28 Nov 2008 22:55:03 -0700
+From: Gary Grider <ggrider@lanl.gov>
+User-Agent: Thunderbird 1.4 (Windows/20050908)
+MIME-Version: 1.0
+To: James Nunez <jnunez@lanl.gov>, john Bent <johnbent@lanl.gov>, 
+ gary Grider <ggrider@lanl.gov>
+Subject: gpfs perf
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+X-NIE-2-MailScanner-Information: Please see http://network.lanl.gov/email/virus-scan.php
+X-NIE-2-MailScanner: Found to be clean
+X-NIE-2-MailScanner-From: ggrider@lanl.gov
+X-Spam-Status: No
+
+This is not a fair test because we have huge disk arrays direct FC 
+attached to these gpfs nodes but
+
+8 nodes 2 procs/node   round robin the procs over the nodes
+N to N 47003 write size barrier after open before close
+
+procs 2   1.3GB/sec
+procs 4   1.5 GB/sec
+procs 8   1.9 GB/sec
+procs 16  2 GB/sec
+
+The disks are about 2 GB/sec so this is about max for the time being
+
+same setup
+N to 1 strided same size and barriers
+
+procs 2   29 MB/sec
+procs 4   30 MB/sec
+procs 8   36 MB/sec
+procs 16 51 MB/sec
+
+It does a bit better without all the barriers   -  all of 80 MB/sec
+
+I honestly thought GPFS would be better at this given the direct SAN 
+attach etc.
+I figured it was worth a shot to see how well it worked with GPFS set up 
+like this.
+I imagine GPFS using NSD like you would in a supercomputer might be worse.
+Could be it climbs faster if you raise the blocksize than panfs
+
+121003 bytes
+N to 1 strided same size barriers
+procs 16 160 MB/sec
+240003 bytes
+N to 1 strided same size barriers
+procs 16  187 MB/sec
+480003 bytes
+N to 1 strided same size barriers
+procs 16  301 MB/sec
+
+How about not odd bytes and reasonable size
+1048576 - 8 bytes
+procs 16   439 MB/sec
+
+How about totally aligned and reasonable size
+1048576
+procs 16   2 GB/sec
+
+How about just a bit more
+1048576 + 8 bytes
+procs 16  536 MB/sec
+
+Man this thing is sensitive to alignment even at large writes
+
+I am now quite anxious to get fuse loaded on these gpfs nodes
+and try plfs on these nodes.
+I bet we can get any little small unaligned N to 1with plfs  to beat the 
+heck
+out of non plfs - without the horrible alignment sensitivity and problem 
+with
+small writes.
+I will ask Cody to get fuse installed on these 8 nodes.  We need it anyway
+for the archive project.
+
+Maybe we have our two file systems  GPFS and PANFS for PLFS to win
+at least on synthetics.  (of course having an app would be better :-)
+
+If Lustre and PVFS are similar we may have a HUGE win on our hands.
+
+
+Gary
+

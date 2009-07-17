@@ -1,0 +1,58 @@
+\newcommand{\C}[1]{\centering{#1}}
+%\newcommand{\C}[1]{\begin{center}#1\end{center}}
+\hyphenation{Immediately}
+\begin{table}
+\begin{center}
+\begin{tabular}{|r|p{19mm}|p{20mm}|p{23mm}|p{15mm}|p{19mm}| p{19mm}|}
+\hline 
+{\em } & 
+\C{{\em Interposition Technique Used}} & 
+\C{{\em No Extra Resources Used During}} & 
+\C{{\em No Extra Resources Used After}} & 
+\C{{\em Maintains Logical Format}} & 
+\C{{\em Works with Unmodified Applications}} & 
+\C{{\em Data Immediately Available}} 
+\tabularnewline \hline
+ADIOS & \C{Library} & \C{Yes} & \C{Yes} & \C{Yes} &  \C{No} & \C{Yes}
+\tabularnewline \hline
+{\tt stdchk} & \C{FUSE} & \C{No (LD, M)} & \C{No (LD, N, M)} & \C{Yes} & \C{Yes} & \C{Yes}
+\tabularnewline \hline
+%Neighbor &  \C{FUSE} &\C{No (M)} & \C{No (M, N)} & \C{Yes} & \C{Yes} & \C{Yes} 
+%\tabularnewline \hline
+Diskless &  \C{Library} &\C{No (M)} & \C{No (M)} & \C{No} & \C{No} & \C{Yes} 
+\tabularnewline \hline
+ZEST &  \C{FUSE} &\C{No (RD)} & \C{No (RD)} & \C{No} & \C{No} & \C{No} 
+\tabularnewline \hline
+PLFS & \C{FUSE} & \C{Yes} & \C{Yes} & \C{Yes} & \C{Yes} & \C{Yes} 
+\tabularnewline \hline
+\end{tabular}
+\mycaption{tab-feature}{Techniques for improving N-1 Checkpointing}{
+This table presents a comparison of the various techniques for reducing
+N-1 checkpoint times.  For exposition, we have used various
+shorthands: 
+%Neighbor for Neighbor's Memory,
+Diskless for Diskless 
+Checkpointing, LD for local disk on the compute nodes, RD for remote disk 
+on the storage system, M for memory, and N for network.  
+}
+\end{center}
+\end{table}
+
+\if 0
+other possible columns:
+
+            Speed
+    ADIOS: Disk                                                                 
+    stdck: Disk                                                                 
+    Neighbor: Network                                                           
+    Diskless: Network                                                           
+    ZEST: Spindle                                                               
+    PLFS: N-N  
+
+lines of code, user or kernel mode, interposition technique, maintainability,
+portability
+
+also if we add more columns we'll have to rotate it so columns become rows and
+rows become columns.
+
+\fi

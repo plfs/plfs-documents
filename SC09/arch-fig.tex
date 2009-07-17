@@ -1,0 +1,49 @@
+\if 0
+% here's a way to try to make it just be one column wide but it didn't
+% work for me, it made it one columnwide but it moved it to the end of the
+%document
+\begin{wrapfigure}{r}{0.5\textwidth}[tb]
+    \begin{center}
+        \psfig{file=figs/architecture.eps,width=0.48\textwidth}
+    \end{center}
+% we can also try to use SCfigure for captions on the side, I tried that
+% and it looks sort of weird.  But I'm also not happy with the default
+% which makes it way too big and leaves too much white space..
+\begin{SCfigure}
+    \centering
+    \includegraphics[width=0.5\textwidth]{figs/architecture.eps}
+\fi
+
+\singlespace
+\begin{figure}[tb]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figs/architecture.eps}
+    \mycaption{fig-arch}{Data Reorganization.}{
+This figure depicts how PLFS reorganizes an N-1 strided checkpoint file onto
+the \upfs.  A parallel application consisting of six
+processes on three compute nodes is represented by the top three boxes.  Each 
+box represents a compute node, a circle is a process, and the three small boxes
+below each process represent the state of that process. The processes
+create a new file on \plfs\ called \textit{checkpoint1}, causing  \plfs\ in
+turn to
+create a \Term{container} structure on the underlying parallel file system.
+The container consists of a top-level directory also called
+\textit{checkpoint1} and several
+sub-directories to store the application's data.  For each
+process opening the file, \plfs\ creates a \Term{data file} within one of the
+sub-directories, it also creates one \Term{index file} within that same 
+sub-directory 
+which is shared by all processes on a compute node.
+For each write, \plfs\ appends the data to the corresponding data file 
+and appends a record into the appropriate index file.  This record
+contains the length of the write, its logical offset, and a pointer
+to its physical offset within the data file to which it was appended.
+To satisfy reads, \plfs\ aggregates these index files to create a lookup
+table for the logical file.  Also shown in this figure are the
+\textit{access} file, which is used to store ownership and privilege
+information about the logical file, and the \textit{openhosts} and
+\textit{metadata} sub-directories which are used to cache metadata in order
+to improve query time (\eg\ a \syscall{stat} call). 
+}
+\end{figure}
+\doublespace

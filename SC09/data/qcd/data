@@ -1,0 +1,12 @@
+# panfs
+# NP WRITE_TIME
+16 332
+32 312
+64 728
+
+
+# plfs
+# NP WRITE_TIME
+16 4
+32 12
+64 17

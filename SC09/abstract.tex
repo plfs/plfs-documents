@@ -1,0 +1,49 @@
+\vspace{-.5cm}
+\abstract{
+\scribble{Rewordings. Eliminated last paragraph. Changed definition of \\upfs to use 'file system' instead of 'file system'. Changed National Science Foundation site to PSC}
+\em{
+Parallel applications running across thousands of processors must protect
+themselves from inevitable component failures. Many applications 
+insulate themselves from failures by checkpointing, a
+process in which they save their state to persistent storage. Following a
+failure, they can resume computation using this state.
+For many applications, saving this state into a shared single file
+is most convenient.  With such an approach, the size of writes are often 
+small and not aligned with file system boundaries. Unfortunately for these
+applications, this preferred data layout results in pathologically poor
+performance from the underlying file system which is optimized for
+large, aligned writes to non-shared files.
+\if 0
+% Milo's changes which I didn't incorporate
+process in which they periodically save their state to persistent storage. Following a
+failure, they can retrieve the most recently saved state and resume computation from that
+point. For many applications, saving this state into a shared single file, often
+formatted for storage by complex libraries such as NetCDF or HDF5,
+is most convenient.  With such an approach, the size of individual write system calls are often 
+small and not aligned with file system boundaries especially when the application cannot statically define the order of state variables, as with adaptive mesh refinement app. Unfortunately for these
+applications, this write access pattern can result in pathologically poor
+performance from an underlying file system, itself often optimized for
+\fi
+ 
+To address this fundamental mismatch, we have developed a parallel
+log-structured file system, \plfs, which is positioned between the applications
+and the \upfs. \plfs\ remaps an application's write access pattern to be
+optimized for the underlying file system. Through testing on Panasas
+ActiveScale Storage System and IBM's General Parallel File System at Los Alamos
+National Lab and on Lustre at Pittsburgh Supercomputer Center, we have seen
+that this layer of indirection and reorganization can reduce checkpoint time by
+up to several orders of magnitude for several important benchmarks and real
+applications. 
+ 
+We expect that \plfs\ can improve the checkpoint bandwidth for any large
+parallel application that writes to a single file. The expected improvement is
+especially large for those applications doing unaligned or random IO, patterns
+which have become increasingly prevalent recently due to the wide-spread
+adoption of complex formatting libraries such as NetCDF and HDF5. 
+
+\if 0
+% here's the 150 word limited version we submitted to SC
+Parallel applications running across thousands of processors must protect themselves from inevitable system failures. Many applications insulate themselves from failures by checkpointing. For many applications, checkpointing into a shared single file is most convenient. With such an approach, the size of writes are often small and not aligned with file system boundaries. Unfortunately for these applications, this preferred data layout results in pathologically poor performance from the underlying file system which is optimized for large, aligned writes to non-shared files. To address this fundamental mismatch, we have developed a virtual parallel log structured file system, PLFS. PLFS remaps an application’s preferred data layout into one which is optimized for the underlying file system. Through testing on PanFS, Lustre, and GPFS, we have seen that this layer of indirection and reorganization can reduce checkpoint time by an order of magnitude for several important benchmarks and real applications.
+\fi
+}
+}

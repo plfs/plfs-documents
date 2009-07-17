@@ -1,0 +1,38 @@
+# SELECT write_total_time_max,hints,mpihome,mpihost,obj_size,total_size_mb,test_type,strided,target,num_hosts FROM experiment WHERE  !isnull(write_total_time_max) && system like 'lime' && isnull(error) && user like 'pauln' && ( procs_per_node=8 || num_hosts=1 ) && isnull(user_error) (1239315117)
+# xpoint ypoint ydev
+# N-1, strided, Lustre yaxis 1
+1 534.587756870719 158.051863439937
+8 165.801774778153 0
+16 28.3057865009414 0
+24 40.9905039566847 0
+32 56.7151303189275 0
+40 115.30603756634 23.3447549330372
+
+
+# N-1, strided, Lustre yaxis 2
+
+
+# N-1, strided, PLFS yaxis 1
+1 226.172251988419 21.3850623011967
+8 212.897288113006 15.2322062894313
+16 315.421392224033 12.6779475108366
+24 394.836301358474 17.5205635695667
+32 421.9962141339 45.2098615031461
+40 772.137871363322 63.4439563003151
+
+
+# N-1, strided, PLFS yaxis 2
+
+
+# N-N, Lustre yaxis 1
+1 561.599806669889 188.82699936957
+8 655.123365747569 0
+16 1388.97126197418 0
+24 1754.19170885392 0
+32 1650.55685862844 0
+40 1444.1497102088 477.467795107589
+
+
+# N-N, Lustre yaxis 2
+
+

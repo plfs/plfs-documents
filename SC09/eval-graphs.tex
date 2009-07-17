@@ -1,0 +1,41 @@
+% eval figures all in one big table
+\begin{figure}[t!]
+\centering
+\begin{tabular}{ccc}
+    \tablefigure{MPI-IO Test on PanFS}{panfs}
+    &
+    \tablefigure{MPI-IO Test on GPFS}{gpfs}
+    &
+    \tablefigure{MPI-IO Test on Lustre}{lustre}
+    \\
+    \tablefigure{LANL Anonymous 1}{lanl1}
+    &
+    \tablefigure{LANL Anonymous 2}{lanl2}
+    &
+    \tablefigure{LANL Anonymous 3}{lanl3}
+    \\
+    \tablefigure{PatternIO}{pattern}
+    &
+    \tablefigure{QCD}{qcd}
+    &
+    \tablefigure{BTIO}{btio}
+    \\
+    \tablefigure{FLASH IO}{flash}
+    &
+    \tablefigure{SUMMARY}{summary}
+    &
+    \tablefigure{Chombo IO}{chombo}
+\end{tabular}
+\mycaption{fig-eval}{Experimental Results.}{
+The three graphs in the top row are the same graphs that were presented
+earlier in Figure~\ref{fig-motivation}, except now they have an additional
+line showing how PLFS allows an N-1 checkpoint to achieve most, if not all,
+of the bandwidth available to an N-N checkpoint. 
+The bar graph in the center of the bottom row consolidates these results and
+shows a pair of bars for each, showing both the relative minimum and the
+maximum speedups achieved across the set of experiments.  Due to radically
+different configurations for these various experiments, the axes for 
+these graphs are not consistent.  The relative comparison within each graph
+should be obvious; absolute values can be ascertained by reading the axes.
+}
+\end{figure}

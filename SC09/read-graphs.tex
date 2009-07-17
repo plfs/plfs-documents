@@ -1,0 +1,27 @@
+\begin{figure}[tb]
+    \centering
+        \readgraph{Uniform Restart}{nn}{data/reads/nn.eps}
+        \readgraph{Non-uniform Restart}{nm}{data/reads/nm.eps}
+        \readgraph{Archive Copy}{n1}{data/reads/archive.eps}
+    \\
+    \mycaption{fig-reading}{Read Bandwidth.}{
+These three graphs show the results of our read measurements on the
+\rrz. We created a set 20~\GB\ N-1 checkpoint files through
+\plfs\ and another directly on PanFS.  Each file was produced by a different
+number of writers; all of the \syscall{writes} were 47001 bytes in size.  For
+each graph, the \yaxis\ shows the read bandwidth as a function of the number of
+writers who created the file.  The graph on the left shows the read bandwidth
+when the number of readers is the same as the number of writers, as is the case
+in a typical uniform restart; in this case, the size of the reads is the same
+as the size of the original writes.  The graph in the middle emulates a
+non-uniform restart in which the application resumes on one fewer compute
+nodes; in this case, the size of the \syscall{reads} is slightly larger than
+the size of the original \syscall{writes}.  Finally, the graph on the right
+shows the read bandwidth when there only four readers; we used LANL's archive
+copy utility and modelled the common scenario of copying checkpoint data to an
+archive system using a relatively small number of readers.  To enable
+comparison across graphs, the axis ranges are consistent.
+} 
+
+\end{figure}
+

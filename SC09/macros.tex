@@ -1,0 +1,71 @@
+\newcommand{\plfs}{PLFS}
+\newcommand{\noopfs}{No-opFS}
+\newcommand{\TITLE}{\plfs: A Checkpoint Filesystem for Parallel Applications}
+\newcommand{\Title}[1]{{\bf #1}}
+\newcommand{\Term}[1]{{\em #1}}
+\newcommand{\eg}{\textit{e.g.}}
+\newcommand{\ie}{\textit{i.e.}}
+\newcommand{\etal}{\textit{et al.}}
+\newcommand{\Math}[1]{$#1$}
+\newcommand{\RAID}{RAID}
+\newcommand{\url}[1]{\textit{#1}}
+\newcommand{\syscall}[1]{\textit{#1}}
+\newcommand{\upfs}{underlying parallel file system}
+\newcommand{\rrz}{Roadrunner test cluster}
+
+\newcommand{\KB}{~KB}
+\newcommand{\KBs}{~KB/s}
+\newcommand{\Kbs}{~Kbit/s}
+\newcommand{\mbs}{~Mbit/s}
+\newcommand{\MB}{~MB}
+\newcommand{\GB}{~GB}
+\newcommand{\MBs}{~MB/s}
+\newcommand{\GBs}{~GB/s}
+\newcommand{\mus}{\mbox{$\mu s$}}
+\newcommand{\ms}{\mbox{$ms$}}
+
+\newcommand{\xaxis}{x-axis}
+\newcommand{\yaxis}{y-axis}
+
+\newlength{\captwidth} \setlength{\captwidth}{0.9\textwidth}
+\newlength{\captsize}  \let\captsize=\footnotesize
+
+\newcommand{\motivationgraph}[2]{
+        \subfloat[#1]{\label{fig:#2-motivation}
+           \includegraphics[width=0.25\textwidth]{data/#2/#2-motivation.eps}}
+}
+
+\newcommand{\readgraph}[3]{
+        \subfloat[#1]{\label{fig:#2-read}
+           \includegraphics[width=0.25\textwidth]{#3}}
+}
+
+\newcommand{\tablefigure}[2]{
+    \subfloat[#1]{\label{eval:#2}\includegraphics[width=0.25\textwidth]
+        {data/#2/#2.eps}}
+}
+
+% works and makes it smaller but it doesn't put it at the bottom of the page
+\newcommand{\myfootnotetext}[1]{
+    {\begin{minipage}{\captwidth}
+    \let\normalsize=\captsize
+    \footnotetext{#1}
+    \end{minipage}}
+}
+
+%\newcommand{\beforecaption}{\vspace{-.15cm}\begin{spacing}{0.85}}
+%\newcommand{\aftercaption}{\hrulefill\vspace{-0.45cm}\end{spacing}}
+% \newcommand{\aftercaption}{\vspace{-.45cm}\end{spacing}}
+\newcommand{\beforecaption}{\vspace{.2cm}}
+\newcommand{\aftercaption}{\vspace{-.2cm}}
+\newcommand{\mycaption}[3]{
+            \beforecaption
+            {\begin{minipage}{\captwidth}
+            \let\normalsize=\captsize
+            \caption[#2]{\label{#1}{{\small \bf #2}}
+            {{\small \em #3}\aftercaption}}
+            \end{minipage}}
+}
+
+%\newcommand{\scribble}[1]{{{\marginpar{\tiny#1}}}}
+\newcommand{\scribble}[1]{}

@@ -1,0 +1,93 @@
+\section{Related Work}
+\label{related}
+
+% Remzi says refer to Erez Zadok's work on stackable file systems
+% also says to refer to Thain's interposition work.  But we already did.
+
+%Sudharshan Vazhkudai has several papers on checkpointing, typically using
+%memory or scavenged local disk as a buffer.  Descriptions available at his
+%webpage: \url{http://www.csm.ornl.gov/~vazhkuda/}.
+
+%Frank Shorter's Master Thesis at Clemson is a big discussion about parallel
+%benchmarks: \url{ftp://ftp.parl.clemson.edu/pub/techreports/2003/PARL-2003-001.ps}.
+
+Translating random access checkpoint writes into a sequential pattern is an
+idea which extends naturally from work on log-structured file
+systems~\cite{lfs} such as NetApp's WAFL~\cite{WAFL} and Panasas's Object
+Storage~\cite{welch08scalableperformance}. While these ideas reorganize disk
+layout for sequential writing, they do not decouple concurrency caused by
+multiple processes writing to a single file.  Another approach to
+log-structuring N-1 patterns addressed only physical layout and also did not
+decouple concurrency~\cite{pvfs-log}.  We believe our contribution of
+rearranging N-1 checkpoints into N-N is a major advance. 
+
+Checkpoint-restart is an old and well studied fault tolerance strategy. A broad
+evaluation of rollback-recovery protocols and checkpointing and a discussion of
+their future at the petascale can be found in \cite{survey1, survey2}.  
+
+Berkeley Lab Checkpoint/Restart~\cite{blcr} and Condor
+Checkpointing~\cite{condor-ckpt} both allow unmodified applications to
+checkpoint the state of a single node.  They leverage the operating system's
+ability to swap a process to save the totality of the swap image persistently.
+The great strength of this approach is that it can be used by applications that
+have no internal checkpoint mechanism.  A disadvantage is that these
+checkpoints are larger then when an application specifies only the exact data
+that it needs saved.
+
+%allows user applications to checkpoint their state, including system
+%resources, without the application programmer having to explicitly code the
+%process. In this regard, it has a similar philosophy to \plfs\ of making
+%checkpointing easier for the application developer, but our focus is on
+%enabling better checkpointing performance for existing applications rather than
+%writing an entire checkpointing system.  
+
+%\scribble{Couldn't find the incremental checkpointing reference}
+
+Conversely, incremental checkpointing and memory
+exclusion~\cite{pcl:99:me,pxn:95:scd} reduce the size of checkpoint data by
+only saving data that has changed since the previous checkpoint.  Buffering
+with copy-on-write~\cite{li-298215} can also reduce checkpoint latency.
+
+\input{related-table}
+
+%A variant of N-N checkpoint uses the disks or memory of computer nodes to
+%record a checkpoint writing it to storage as a background process during the
+%next compute period. 
+
+{\tt stdchk}~\cite{stdchk} saves checkpoints into a cloud of free disk space
+scavenged from a cluster of workstations.  A similar
+approach~\cite{aggregate-memory} reserves compute node memory to temporarily
+buffer checkpoints and then asynchronously saves them to persistent storage.
+Diskless checkpointing~\cite{diskless} also  
+saves checkpoints into compute node memory, but does not subsequently transfer
+them to persistent storage.  Rather it achieves fault protection by using erasure 
+coding on the distributed checkpoint image. 
+Although these techniques work well for many applications, large HPC parallel
+applications jealously utilize all memory and demand a high degree of
+determinism in order to avoid jitter~\cite{DusseauPhd98} and are therefore seen
+to be poorly served by techniques reducing available memory or techniques which
+require background processes running during computation.
+
+The Adaptable IO System (ADIOS)~\cite{adios} developed by the Georgia Institute
+of Technology and Oak Ridge National Laboratory provides a high-level IO API
+that can be used in place of HDF5 to do much more aggressive write-behind and
+log-like reordering of data location within the checkpoint. While this technique
+requires application modification, it enables interoperability with other
+middleware libraries. 
+
+ZEST~\cite{zest}, developed at Pittsburgh Supercomputing Center, is a file
+system infrastructure that is perhaps the most similar in philosophy to \plfs,
+particularly in its borrowing of concepts from log-structured file systems.
+Rather than each client process pushing their writes sequentially to storage,
+in ZEST manager threads running on behalf of each disk pull data from a series
+of distributed queues, in a technique borrowed from
+River~\cite{Arpaci-Dusseau03-TOCS}.  The key aspect of ZEST is that no
+individual write request is ever assigned to a specific disk; disks pull from
+these queues whenever they are not busy, resulting in high spindle utilization
+even in a system where some devices are performing more slowly than others.
+Unlike \plfs, however, data is not immediately available to be read, requiring
+a subsequent phase to first rewrite the file before it can be accessed.  Since
+this phase happens in the relatively long time between checkpoints and since it
+happens on the server nodes and not on the compute nodes, this subsequent
+rewrite phase is not typically problematic for a dedicated checkpoint file
+system.

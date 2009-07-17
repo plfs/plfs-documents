@@ -1,0 +1,14 @@
+set style data linespoints
+set key inside left top vertical Right noreverse enhanced autotitles nobox
+set xlabel "Number of Processors" 
+set ylabel "Write Bandwidth (MB/s)" 
+set terminal postscript enhanced 20 eps
+set output 'gpfs-motivation.eps'
+plot 'data' index 0 t "N-N" lw 3 ps 2 lt 1, \
+    '' index 1 t "N-1 Strided" lw 3 ps 2 lt 2
+
+set key graph 0.5,0.5
+set output 'gpfs.eps'
+plot 'data' index 0 t "N-N" lw 3 ps 2 lt 1, \
+     ''     index 2 t "PLFS" lw 3 ps 2 lt 3, \
+     ''     index 1 t "N-1 Strided" lw 3 ps 2 lt 2
