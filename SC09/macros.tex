@@ -27,7 +27,7 @@
 \newcommand{\xaxis}{x-axis}
 \newcommand{\yaxis}{y-axis}
 
-\newlength{\captwidth} \setlength{\captwidth}{0.9\textwidth}
+\newlength{\captwidth} \setlength{\captwidth}{0.45\textwidth}
 \newlength{\captsize}  \let\captsize=\footnotesize
 
 \newcommand{\motivationgraph}[2]{
@@ -47,7 +47,7 @@
 
 % works and makes it smaller but it doesn't put it at the bottom of the page
 \newcommand{\myfootnotetext}[1]{
-    {\begin{minipage}{\captwidth}
+    {\begin{minipage}%{\captwidth}
     \let\normalsize=\captsize
     \footnotetext{#1}
     \end{minipage}}
@@ -60,11 +60,8 @@
 \newcommand{\aftercaption}{\vspace{-.2cm}}
 \newcommand{\mycaption}[3]{
             \beforecaption
-            {\begin{minipage}{\captwidth}
-            \let\normalsize=\captsize
             \caption[#2]{\label{#1}{{\small \bf #2}}
             {{\small \em #3}\aftercaption}}
-            \end{minipage}}
 }
 
 %\newcommand{\scribble}[1]{{{\marginpar{\tiny#1}}}}
