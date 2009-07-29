@@ -2,6 +2,7 @@
 \abstract{
 \scribble{Rewordings. Eliminated last paragraph. Changed definition of \\upfs to use 'file system' instead of 'file system'. Changed National Science Foundation site to PSC}
 \em{
+\if 0
 Parallel applications running across thousands of processors must protect
 themselves from inevitable component failures. Many applications 
 insulate themselves from failures by checkpointing, a
@@ -40,10 +41,21 @@ parallel application that writes to a single file. The expected improvement is
 especially large for those applications doing unaligned or random IO, patterns
 which have become increasingly prevalent recently due to the wide-spread
 adoption of complex formatting libraries such as NetCDF and HDF5. 
-
-\if 0
-% here's the 150 word limited version we submitted to SC
-Parallel applications running across thousands of processors must protect themselves from inevitable system failures. Many applications insulate themselves from failures by checkpointing. For many applications, checkpointing into a shared single file is most convenient. With such an approach, the size of writes are often small and not aligned with file system boundaries. Unfortunately for these applications, this preferred data layout results in pathologically poor performance from the underlying file system which is optimized for large, aligned writes to non-shared files. To address this fundamental mismatch, we have developed a virtual parallel log structured file system, PLFS. PLFS remaps an application’s preferred data layout into one which is optimized for the underlying file system. Through testing on PanFS, Lustre, and GPFS, we have seen that this layer of indirection and reorganization can reduce checkpoint time by an order of magnitude for several important benchmarks and real applications.
 \fi
-}
-}
+
+% here's the 150 word limited version we submitted to SC
+Parallel applications running across thousands of processors must protect
+themselves from inevitable system failures. Many applications insulate
+themselves from failures by checkpointing. For many applications, checkpointing
+into a shared single file is most convenient. With such an approach, the size
+of writes are often small and not aligned with file system boundaries.
+Unfortunately for these applications, this preferred data layout results in
+pathologically poor performance from the underlying file system which is
+optimized for large, aligned writes to non-shared files. To address this
+fundamental mismatch, we have developed a virtual parallel log structured file
+system, PLFS. PLFS remaps an application’s preferred data layout into one which
+is optimized for the underlying file system. Through testing on PanFS, Lustre,
+and GPFS, we have seen that this layer of indirection and reorganization can
+reduce checkpoint time by an order of magnitude for several important
+benchmarks and real applications.  
+} }

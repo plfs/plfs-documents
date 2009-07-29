@@ -5,6 +5,7 @@ set ylabel "Write Bandwidth (MB/s)"
 set xlabel "Write Size (MB)"
 set pointsize 1
 set xrange [0:8]
+set ytics 250
 plot 'data.txt' using ($2/1048576):($4*1024) index 0 pt 1 ps 2 t "With PLFS", '' using ($2/1048576):($4*1024) index 1 pt 7 t "Without PLFS"
 
 set xrange [0:5]

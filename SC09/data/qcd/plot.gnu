@@ -6,6 +6,7 @@ set style data linespoints
 set xlabel "Number of Processes" 
 set terminal postscript enhanced 32 eps
 filesize=40
+set ytics 5
 
 set output "qcd-times.eps"
 set ylabel "Write Time (s)" 

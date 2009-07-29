@@ -3,11 +3,12 @@ set logscale x 2
 set style data linespoints
 #set title "Chombo on LANL's RRZ" 
 set xlabel "Number of Processors" 
-set ylabel "Bandwidth (MB/s)" 
+set ylabel "Write Bandwidth (MB/s)" 
 #set grid y
 set terminal postscript enhanced 32 eps 
 set output "chombo.eps"
 set xrange [7:590]
+set ytics 200
 plot 'plfs.dat' using 1:($4/$15) t "With PLFS" lt 1, \
     '' using 1:($4/$15):($4/($15+$16)):($4/($15-$16)) with errorbars lt 1 not, \
     'panfs.dat' using 1:($4/$15) t "Without PLFS" lt 2, \

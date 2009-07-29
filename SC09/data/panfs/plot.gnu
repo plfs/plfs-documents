@@ -5,9 +5,10 @@ set xlabel "Number of Processes"
 set terminal postscript enhanced 32 eps
 set yrange [0:35000]
 set xtics 2000
+set ytics 10000
 
 set output "panfs-motivation.eps"
-plot 'combined.dat' index 2 t "N-N, PanFS", 'panfs_47K.dat' index 0 t "N-1, PanFS"
+plot 'combined.dat' index 2 t "N-N", 'panfs_47K.dat' index 0 t "N-1"
 set terminal png giant
 set output "panfs-motivation.png"
 plot 'combined.dat' index 2 lw 3 lt 1 t "N-N", 'panfs_47K.dat' index 0 lw 3 lt 3 t "N-1"
@@ -56,6 +57,7 @@ set multiplot
 set arrow 3 from 1200,0 to 1200,9000 nohead lt 3 lw 2
 set arrow 4 from 0,9000 to 1200,9000 nohead lt 3 lw 2
 set arrow 5 from 1200,4500 to 3650,9000 head lw 2
+set ytics 10000
 plot 'combined.dat' index 0 t "N-1, PLFS", '' index 2 t "N-N, PanFS", 'panfs_47K.dat' index 0 t "N-1, PanFS"
 #plot [0:2*pi] sin(t),cos(t) not
 #set arrow from 1200,0 to 1200,8500

@@ -4,6 +4,7 @@ set xlabel "Number of Processors"
 set ylabel "Write Bandwidth (MB/s)" 
 set terminal postscript enhanced 32 eps
 
+set ytics 1000
 set output 'gpfs.eps'
 plot '1.dat' index 2 t 'N-N, GPFS', \
      '' index 1 t 'N-1, PLFS', \

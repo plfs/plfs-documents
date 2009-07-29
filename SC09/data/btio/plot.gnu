@@ -6,6 +6,7 @@ set style fill pattern
 set style rectangle back fc  lt -3 fillstyle  solid 1.00 border -1
 set xrange [0.5:2.5]
 set xtics   ("Without PLFS" 1.00000, "With PLFS" 2.00000)
+set ytics 1
 #set title "BT-IO, 16 NP, LANL RRZ" 
 set ylabel "Write Time (s)" 
 

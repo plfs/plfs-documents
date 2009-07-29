@@ -1,8 +1,9 @@
 set terminal postscript enhanced 32 eps
-set ylabel "Bandwidth (MB/s)"
+set ylabel "Write Bandwidth (MB/s)"
 set xlabel "Number of Processes"
 set yrange [0:*]
 set xtics 2000
+set ytics 3000
 set style data linespoints
 set output "lanl3.eps"
 set key top left

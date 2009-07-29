@@ -2,12 +2,13 @@ set key inside left top vertical Right noreverse enhanced autotitles nobox
 set logscale x 2
 set style data linespoints
 set xlabel "Number of Processors" 
-set ylabel "Bandwidth (MB/s)" 
+set ylabel "Write Bandwidth (MB/s)" 
 #set grid y
 set terminal postscript enhanced 32 eps
 set xrange [7:2048]
 set yrange [0:*]
 set xtics 8,4,2048
+set ytics 4000
 
 set output "flash_ckpt.eps"
 #set title "FLASH-IO (HDF5) on LANL's RRZ for Checkpoint File" 

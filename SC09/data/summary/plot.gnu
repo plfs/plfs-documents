@@ -7,11 +7,8 @@ set boxwidth 0.7 absolute
 set xrange [0:21]
 set yrange [0:*]
 set ylabel "Speedup (X)"
-set output "summary.eps"
-set xtics   ("(i)" 1.50000, "(l)" 4.50000, "(j)" 7.50000, "(d)" 10.5000, "(e)" 13.5000, "(f)" 16.5000, "(g)" 19.5000)
-plot 'data' with boxes fill pattern 1 not
 
-set terminal postscript enhanced 20 eps
+set terminal postscript enhanced 19 eps
 set boxwidth 1.5
 set logscale y 10
 set yrange [*:*]
@@ -23,3 +20,11 @@ plot 'data.page1' with boxes fill pattern 1 not
 set terminal png giant
 set output 'page1.png'
 plot 'data.page1' with boxes fs solid 0.75 lt 4 not 
+
+set yrange [0:160]
+set terminal postscript enhanced 32 eps
+set output "summary.eps"
+set ytics 25 
+set xtics   ("(i)" 1.50000, "(l)" 4.50000, "(j)" 7.50000, "(d)" 10.5000, "(e)" 13.5000, "(f)" 16.5000, "(g)" 19.5000)
+unset logscale y
+plot 'data' with boxes fill pattern 1 not
