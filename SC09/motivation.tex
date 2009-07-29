@@ -2,14 +2,13 @@
 \label{motivation}
 
 % Why do we care about checkpointing
-For large parallel simulations which can run for several months, restarting a
-calculation from the beginning is not viable, since the mean time to interrupt
-for today's supercomputers is measured in days or hours and not
-months~\cite{google-failure,schroeder-failure}.  As a result, applications 
+\if 0
+As a result, applications 
 periodically save
 the current state of their computation to persistent storage.  Later, after a
 failure is encountered, the application can restart from the last saved
 checkpoint. 
+\fi
 
 % N-N compared to N-1
 
@@ -39,7 +38,6 @@ illustrated in Figure~\ref{fig-patterns}.  Since N-1 segmented is a rare pattern
 in practice, hereafter we consider only N-1 strided and we refer to it with the
 shorthand N-1. 
 
-\input{patterns-fig}
 \scribble{Should probably explain or remove 'false sharing' in figure}
 \scribble{If those Argonne graphs were decipherable in B-W, I'd like to include
 two of them to visualize the difference between strided and non.}
@@ -61,28 +59,37 @@ that the challenges of N-1 checkpointing are more difficult.
 Applications using N-1 patterns consistently achieve significantly less
 bandwidth than do those using an N-N pattern. 
 
+\input{motivation-graphs}
 
-Figure~\ref{fig-motivation} presents experimental data validating this discrepancy: An N-1 checkpoint pattern receives
-only a small fraction of the bandwidth achieved by an N-N pattern on PanFS,
-GPFS, and Lustre and does not scale with increased numbers of nodes.  The 
-PanFS experiment, run on LANL's Roadrunner
-supercomputer, shows a maximum observed N-N bandwidth of 31~\GBs\ compared
-to a maximum observed N-1 bandwidth of less than 100~\MBs. 
-Although we show PanFS results
-using their default RAID-5 configuration, PanFS has also a RAID-10
-configuration which reduces the implicit sharing caused by N-1 patterns when
-two writers both need to update the same parity.  While this solution improves
-scaling and offers much higher N-1 write bandwidth without sacrificing
-reliability, it does so by writing every byte twice, a scheme that, at best,
-can achieve only approximately half of the write bandwidth of N-N on RAID-5.
-\plfs, however, as will be shown in Section~\ref{eval}, can get much closer.
+Figure~\ref{fig-motivation} presents experimental data validating this
+discrepancy: An N-1 checkpoint pattern receives only a small fraction of the
+bandwidth achieved by an N-N pattern on PanFS, GPFS, and Lustre and does not
+scale with increased numbers of nodes.  The PanFS experiment, run on LANL's
+Roadrunner supercomputer using its 1000 blade PanFS storage system, shows a
+maximum observed N-N bandwidth of 31~\GBs\ compared to a maximum observed N-1
+bandwidth of less than 100~\MBs.  Although we show PanFS results using their
+default RAID-5 configuration, PanFS has also a RAID-10 configuration which
+reduces the implicit sharing caused by N-1 patterns when two writers both need
+to update the same parity.  While this solution improves scaling and offers
+much higher N-1 write bandwidth without sacrificing reliability, it does so by
+writing every byte twice, a scheme that, at best, can achieve only
+approximately half of the write bandwidth of N-N on RAID-5.  \plfs, however, as
+will be shown in Section~\ref{eval}, can get much closer.
 
 The GPFS and Lustre experiments were run on much smaller systems. The GPFS
 experiment was run using an archive attached to Roadrunner using its 
 nine, quad-core, file transfer nodes.  The Lustre experiment was run using five
 client machines, each with eight cores, and twelve Lustre servers.  All three
 file systems exhibit similar behavior; N-N bandwidths are consistently higher
-than N-1 by at least an order of magnitude.
+than N-1 by at least an order of magnitude.  Measurements were gathered using
+the LANL synthetic checkpoint tool, \Term{MPI-IO Test}~\cite{mpi-io-test}.
+For each of these graphs, the size of each \syscall{write} was
+47001 bytes (a small, unaligned number observed in actual applications to be
+particularly problematic for file systems). \syscall{Writes} were
+issued until two minutes had elapsed. Although this is atypical since 
+applications tend to write a fixed amount of data instead of writing for
+a fixed amount of time, we have observed that this allows representative 
+bandwidth measurements with a predictable runtime. 
 
 % why all applications not N-N
 Since N-N checkpointing derives higher bandwidth than N-1, the obvious path to
@@ -101,8 +108,6 @@ of compute nodes is easier to code as the checkpoint format is independent of
 the number of processes that captured the checkpoint; conversely, gathering the
 appropriate regions from multiple files or from multiple regions within a
 single file is more complicated.  
-
-\input{motivation-graphs}
 
 % a list of some apps that do N-1
 

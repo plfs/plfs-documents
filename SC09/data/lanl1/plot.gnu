@@ -4,7 +4,7 @@ set pointsize 2
 #set logscale x 2
 set style data linespoints
 set ylabel "Write Bandwidth (MB/s)"
-set xlabel "Number of Processors"
+set xlabel "Number of Processes"
 set ytics 1000
 set xtics 200
 

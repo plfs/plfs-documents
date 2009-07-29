@@ -1,7 +1,7 @@
 set key inside left top vertical Right noreverse enhanced autotitles nobox
 set logscale x 2
 set style data linespoints
-set xlabel "Number of Processors" 
+set xlabel "Number of Processes" 
 set ylabel "Write Bandwidth (MB/s)" 
 #set grid y
 set terminal postscript enhanced 32 eps

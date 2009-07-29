@@ -53,9 +53,10 @@ Unfortunately for these applications, this preferred data layout results in
 pathologically poor performance from the underlying file system which is
 optimized for large, aligned writes to non-shared files. To address this
 fundamental mismatch, we have developed a virtual parallel log structured file
-system, PLFS. PLFS remaps an application’s preferred data layout into one which
+system, PLFS. PLFS remaps an application's preferred data layout into one which
 is optimized for the underlying file system. Through testing on PanFS, Lustre,
 and GPFS, we have seen that this layer of indirection and reorganization can
 reduce checkpoint time by an order of magnitude for several important
 benchmarks and real applications.  
-} }
+} 
+}

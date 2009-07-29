@@ -42,7 +42,7 @@ To satisfy reads, \plfs\ aggregates these index files to create a lookup
 table for the logical file.  Also shown in this figure are the
 \textit{access} file, which is used to store ownership and privilege
 information about the logical file, and the \textit{openhosts} and
-\textit{metadata} sub-directories which are used to cache metadata in order
+\textit{metadata} sub-directories which cache metadata in order
 to improve query time (\eg\ a \syscall{stat} call). 
 }
 \end{figure*}

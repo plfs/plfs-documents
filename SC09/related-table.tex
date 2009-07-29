@@ -21,6 +21,8 @@ ADIOS & \C{Library} & \C{Yes} & \C{Yes} & \C{Yes} &  \C{No} & \C{Yes}
 %\tabularnewline \hline
 Diskless &  \C{Library} &\C{No (M)} & \C{No (M)} & \C{No} & \C{No} & \C{Yes} 
 \tabularnewline \hline
+Sp Writ &  \C{Library} &\C{Yes} & \C{Yes} & \C{Yes} & \C{No} & \C{No} 
+\tabularnewline \hline
 ZEST &  \C{FUSE} &\C{No (RD)} & \C{No (RD)} & \C{No} & \C{No} & \C{No} 
 \tabularnewline \hline
 PLFS & \C{FUSE} & \C{Yes} & \C{Yes} & \C{Yes} & \C{Yes} & \C{Yes} 
@@ -32,7 +34,7 @@ N-1 checkpoint times.  For exposition, we have used various
 shorthands: 
 %Neighbor for Neighbor's Memory,
 Diskless for Diskless 
-Checkpointing, LD for local disk on the compute nodes, RD for remote disk 
+Checkpointing, Sp Writ for Lustre Split Writing, LD for local disk on the compute nodes, RD for remote disk 
 on the storage system, M for memory, and N for network.  
 }
 \end{center}

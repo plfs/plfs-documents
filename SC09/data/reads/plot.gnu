@@ -1,6 +1,6 @@
 set style data yerrorlines
 set ylabel "Read Bandwidth (MB/s)"
-set xlabel "Number of Original Writers"
+set xlabel "Number of Writers"
 set terminal postscript enhanced 32 eps
 set xtics 200
 set yrange [0:1000]

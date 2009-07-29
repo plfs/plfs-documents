@@ -73,7 +73,11 @@ of Technology and Oak Ridge National Laboratory provides a high-level IO API
 that can be used in place of HDF5 to do much more aggressive write-behind and
 log-like reordering of data location within the checkpoint. While this technique
 requires application modification, it enables interoperability with other
-middleware libraries. 
+middleware libraries.  Similarly, Lustre Split Writing~\cite{lsw}, uses a 
+library approach and leverages Lustre's file joining mechanism to decouple
+concurrent access at runtime as does \plfs.  However, Lustre Split Writing is
+wed to the Lustre file system, requires application modification, and prevents
+the data from being immediately available following a checkpoint.
 
 ZEST~\cite{zest}, developed at Pittsburgh Supercomputing Center, is a file
 system infrastructure that is perhaps the most similar in philosophy to \plfs,

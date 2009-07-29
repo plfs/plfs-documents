@@ -1,7 +1,7 @@
 #!/tmp/gnuplot-ppc/bin/gnuplot -persist
 set key top left 
 set style data yerrorlines
-set xlabel "Number of Processors" 
+set xlabel "Number of Processes" 
 set ylabel "Write Bandwidth (MB/s)" 
 set xrange [0:*]
 set yrange [0:*]

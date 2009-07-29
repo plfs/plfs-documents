@@ -1,6 +1,6 @@
 set style data yerrorlines
 set key inside left top 
-set xlabel "Number of Processors" 
+set xlabel "Number of Processes" 
 set ylabel "Write Bandwidth (MB/s)" 
 set terminal postscript enhanced 24 eps
 

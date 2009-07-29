@@ -8,9 +8,8 @@ convenience of N-1 patterns could be preserved while achieving the bandwidth of
 N-N.  However, after achieving such large improvements with real LANL
 applications, we were compelled to harden it 
 into a production file system. Consisting of about three thousand lines of
-code, \plfs\ is currently a permanent mount point on Roadrunner where several
-applications have begun evaluating whether it is appropriate for their write 
-patterns.
+code, \plfs\ is currently an optional mount point on Roadrunner where several
+applications have begun using it to improve their N-1 checkpoint performance. 
 
 %Since \plfs\ consists of only three thousand
 %source lines of code and is easily ported to all Linux architectures, we
@@ -19,16 +18,24 @@ patterns.
 %\footnotetext{were persuaded by management}
 
 Although \plfs\ works transparently with unmodified applications, in practice
-some applications may need to make minor changes.  Applications that open
-\plfs\ files in read-write mode will find that reading from these files can be
-very slow.  As we discussed in Section~\ref{arch-read}, reads in \plfs\ are
-handled by reading and aggregating the index files.  When files are opened in
-write-read mode, this process must be repeated for every \syscall{read} since
-intervening \syscall{writes} may have occurred.  Although the vast majority of
-HPC applications are able to read in read-only mode, we do plan to investigate
-removing this limitation in the future for those few applications who must occasionally
-read while writing.  One possibility is to introduce metadata
-servers which can synchronously maintain an aggregated index in memory. 
+some applications may need to make minor changes.  Many users find it most
+convenient to stage their input data sets and their executable code in the same
+directory where they write their checkpoint files.  Since \plfs\ is
+specifically a checkpoint file system and is not a general purpose file system,
+this usage pattern may suffer a performance hit.  These users should instead
+stage their input data sets and their executable code in a general purpose file
+system and merely direct their N-1 checkpoint files to a \plfs\ directory.
+
+Also, applications that open \plfs\ files in read-write mode will find that
+reading from these files can be very slow.  As we discussed in
+Section~\ref{arch-read}, reads in \plfs\ are handled by reading and aggregating
+the index files.  When files are opened in write-read mode, this process must
+be repeated for every \syscall{read} since intervening \syscall{writes} may
+have occurred.  Although the vast majority of HPC applications are able to read
+in read-only mode, we do plan to investigate removing this limitation in the
+future for those few applications who must occasionally read while writing.
+One possibility is to introduce metadata servers which can synchronously
+maintain an aggregated index in memory. 
 
 Originally intended merely to address N-1 challenges, \plfs\, as currently
 designed, also has the potential to address N-N challenges.  One way that

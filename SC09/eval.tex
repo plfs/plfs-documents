@@ -22,14 +22,7 @@ The top three graphs,
 Figures~\ref{eval:panfs},~\ref{eval:gpfs},~and~\ref{eval:lustre}, present the
 results of our study using the LANL synthetic checkpoint tool, \Term{MPI-IO
 Test}~\cite{mpi-io-test}, on three different parallel file systems, PanFS, GPFS,
-and Lustre. For each of these graphs, the size of each \syscall{write} was
-47001 bytes (a small, unaligned number observed in actual applications to be
-particularly problematic for file systems). \syscall{Writes} were
-issued until two minutes had elapsed. Although this is atypical since 
-applications tend to write a fixed amount of data instead of writing for
-a fixed amount of time, we have observed that this allows representative 
-bandwidth measurements with a predictable runtime. 
-
+and Lustre. 
 There are several things to notice in these graphs. The first is that these
 are the same three graphs that we presented in Figure~\ref{fig-motivation}
 except that we have now added a third line to each. The three lines show the
@@ -58,71 +51,61 @@ multiple sub-directories within a top-level directory whereas a typical N-N
 pattern confines all N files into only a single parent directory.
 
 Although \plfs\ does improve the bandwidth of N-1 patterns on GPFS and Lustre,
-the improvement is not as large as it is on PanFS. This is because the scale
-of the experiments on PanFS are 200 times larger than on the other two
-platforms. In the inset in Figure~\ref{eval:panfs} at the extreme low values
-for the number of processes, we see that \plfs\ does not scale N-1 bandwidth
-as fast as N-N scales for PanFS as well. This is due to overheads incurred by
-both FUSE and \plfs; these overheads limit the total bandwidth achieved by any
-single compute node relative to N-N. For HPC systems at extreme scale this
-limitation does not matter since aggregate bandwidth across multiple nodes is
-more relevant than the bandwidth from a single node. In this case the real
-limiting factor is the total bandwidth capacity of the storage fabric, which
-generally saturates when using only a small fraction of compute nodes.
-However, with poorly-behaved IO patterns (\ie\ N-1), even very large jobs may
-not reach these bandwidth limits because they will be more severely
-constrained by file system limitations as exemplified by
-Figure~\ref{fig-motivation}. \plfs\ is designed to remove these file system
-limitations, so that jobs can achieve higher bandwidth and reach the
-same limitation of the storage fabric which is constraining N-N bandwidth. 
+the improvement is not as large as it is on PanFS. This is because the scale of
+the experiments on PanFS are 200 times larger than on the other two platforms.
+In the inset in Figure~\ref{eval:panfs} at the extreme low values for the
+number of processes, we see that \plfs\ does not scale N-1 bandwidth as fast as
+N-N scales for PanFS as well. This is due to overheads incurred by both FUSE
+and \plfs; these overheads limit the total bandwidth achieved by any single
+compute node relative to N-N. For HPC systems at extreme scale this limitation
+does not matter since aggregate bandwidth across multiple nodes is more
+relevant than the bandwidth from a single node. In this case the real limiting
+factor is the total bandwidth capacity of the storage fabric, which generally
+saturates when using only a small fraction of compute nodes.  However, with
+poorly-behaved IO patterns (\ie\ N-1), even very large jobs may not reach these
+bandwidth limits because they will be more severely constrained by file system
+limitations as exemplified by Figure~\ref{fig-motivation}. \plfs\ is designed
+to remove these file system limitations, so that jobs can achieve higher
+bandwidth and reach the same limitation of the storage fabric which is
+constraining N-N bandwidth.  We will examine the FUSE and PLFS overheads in
+greater detail in Section~\ref{overhead}. 
  
-An unusual feture of the inset graph in Figure~\ref{eval:panfs} is that there
-are localized bottlenecks about 700 processes.  This is due to the
-architecture of Roadrunner and it's connection to PanFS.  Roadrunner is split
-into seventeen sub-clusters, \Term{CUs}, each of which can run 720 proceses.
-The CUs are fully connected via an Infiniband fat tree, however, in order to
-minimize network infrastructure costs, the storage system is partitioned into
-multiple sub-nets. Each CU currently has six specialized IO nodes, one for
-each sub-net; these six IO nodes are the storage bandwidth bottleneck.
-Therefore, as a job grows within a CU, it quickly saturates the IO node
-bandwidth; when it grows into another CU, its bandwidth increases sharply due
-to gaining six additional IO nodes: this explains the "stair-step" behavior of
-the N-N and \plfs\ lines in this graph. 
+An unusual feature of the inset graph in Figure~\ref{eval:panfs} is that there
+are localized bottlenecks about 700 processes.  This is due to the architecture
+of Roadrunner and it's connection to its 1000 blade PanFS storage system.
+Roadrunner is split into seventeen sub-clusters, \Term{CUs}, each of which can
+run 720 proceses.  The CUs are fully connected via an Infiniband fat tree,
+however, in order to minimize network infrastructure costs, the storage system
+is partitioned into multiple sub-nets. Each CU currently has six specialized IO
+nodes, one for each sub-net; these six IO nodes are the storage bandwidth
+bottleneck.  Therefore, as a job grows within a CU, it quickly saturates the IO
+node bandwidth; when it grows into another CU, its bandwidth increases sharply
+due to gaining six additional IO nodes: this explains the ``stair-step"
+behavior of the N-N and \plfs\ lines in this graph. 
  
 We do see this same behavior in our GPFS and Lustre graphs, but due to the
 very small size of our test systems, we do not have enough compute nodes to
 saturate the available storage bandwidth and thus neither the N-N nor the
-\plfs\ lines in these graphs reach a storage bandwidth bottleneck. We will
-examine the FUSE and PLFS overheads in greater detail in
-Section~\ref{overhead}. 
+\plfs\ lines in these graphs reach a storage bandwidth bottleneck. 
 
 \subsection{Real LANL Applications}
 
-The second row in Figure~\ref{fig-eval}, consisting of
-Figures~\ref{eval:lanl1},~\ref{eval:lanl2},~and~\ref{eval:lanl3}, shows the
-results of using \plfs\ to improve the bandwidth of three important LANL
-applications which use N-1 checkpoint patterns. The application
-shown in Figure~\ref{eval:lanl1} is the application whose developers augmented
-their checkpoint routine with a new checkpoint library called bulkio, which
-aggregates and buffers writes into larger, contiguous writes more friendly to
-the \upfs. Therefore we show four lines in this graph: one for the old
-checkpoint method which uses MPI-IO routines to directly write data to PanFS, a
-line for the bulkio method writing directly to PanFS, and a second line for
-each of these techniques writing indirectly to PanFS via \plfs. Notice that
-\plfs\ is not able to improve the bulkio technique which loses a significant
-amount of bandwidth due to aggregating data and reducing parallelism by
-reducing the number of writers. However, when the older MPI-IO technique is
-used with \plfs, \plfs\ is able to exploit the additional parallelism possible
-by using all of the processes as writers. This data was collected on a small,
-Opteron-only, \rrz. The next two graphs show similar results; using \plfs\ to
-rearrange an N-1 pattern yields significantly improved bandwidths.
-Figure~\ref{eval:lanl2} was also run on the \rrz, whereas
-Figure~\ref{eval:lanl3} was run on Roadrunner itself; this can be seen by the
-much larger scale (on both the \yaxis\ and the \xaxis) for
-Figure~\ref{eval:lanl3}. Note that hese are extremely important applications
-at LANL; it has been estimated that they account for more than half of the
-total computing cycles at LANL. Although these applications must remain
-anonymous, traces of their IO are available~\cite{plfs-maps}.
+The second row in Figure~\ref{fig-eval} shows the results of using \plfs\ to
+improve the bandwidth of three important LANL applications which use N-1
+checkpoint patterns. The application shown in Figure~\ref{eval:lanl1} is the
+application whose developers augmented their checkpoint routine with a new
+checkpoint library called bulkio, which aggregates and buffers writes into
+larger, contiguous writes more friendly to the \upfs. Therefore we compare the
+bulkio method writing directly to PanFS to the old MPI-IO method writing
+indirectly to PanFS via \plfs.  This data was collected on Roadrunner.  The
+next two graphs show similar results; using \plfs\ to rearrange an N-1 pattern
+yields significantly improved bandwidths.  Figure~\ref{eval:lanl2} was run on a
+small \rrz\ which consists of 128 8-core compute nodes with a 66 blade PanFS
+storage system, whereas Figure~\ref{eval:lanl3} was run on Roadrunner itself.
+Note that these are extremely important applications at LANL; it has been
+estimated that they account for more than half of the total computing cycles at
+LANL.  Although these applications must remain anonymous, traces of their IO
+are available~\cite{plfs-maps}.
 
 \subsection{NERSC's PatternIO Benchmark}
 
@@ -151,8 +134,8 @@ the number of processes increases. This is because the amount of data written
 by QCD is a small constant value and the overhead due to container creation
 incurred in the \syscall{open} becomes proportionally greater as the amount of
 data written by each process decreases. BTIO~\cite{btio-io} in
-Figure~\ref{eval:btio} also shows a large improvement but we currently only
-have one data point; we will have more in the final version.
+Figure~\ref{eval:btio} also shows a large improvement but only
+for one data point.
 FLASH~IO~\cite{flash-io} and Chombo~IO\cite{chombo-io}, shown respectively in
 Figures~\ref{eval:flash}~and~\ref{eval:chombo}, both show improvement due to
 \plfs\ which scales nicely with an increasing number of processes. FLASH was
@@ -171,11 +154,6 @@ HPC. The relevant results from reasonably sized jobs, showed at least a
 doubling of performance for all studied benchmarks. QCD and BTIO experienced a
 single order of magnitude improvement. The best result was observed for FLASH
 which was improved in the best case by two orders of magnitude. 
-
-[Note to the reviewer: Only FLASH and LANL3 were run at large-scale using both
-\plfs\ and the \upfs. We will have fuller results for the final experiment and
-we expect at least two orders of magnitude improvement for all of them except
-QCD.]
 
 \subsection{Overhead}
 \label{overhead}
@@ -244,8 +222,8 @@ successive reads.
 We measured the time to read these files using three different read
 scenarios. One emulates a \Term{uniform restart} in which the number of
 processes resuming the application is the same as the number that wrote the
-last checkpoint. In this case, each rank within the parallel job reads the
-same data in the same order as the previous writer of that same rank. In
+last checkpoint. In this case, each process within the parallel job reads the
+same data in the same order as one of the previous writers. In
 contrast, a \Term{non-uniform restart} is one in which the number of
 readers is different from the number of writers and the read offsets are
 therefore not aligned with the previous writes. In this case, we emulate the

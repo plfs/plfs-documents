@@ -9,9 +9,13 @@ the petaflop barrier and claimed the top spot on the Top 500 list~\cite{top500}
 with the Roadrunner supercomputer~\cite{roadrunner}.  Due to its unique hybrid
 architecture, Roadrunner has only 3060 nodes, which is a relatively small
 number for a supercomputer of its class.  Unfortunately, even at this size,
-component failures are a frequent event.  These failures are particularly
-problematic as many applications at LANL, and other High Performance Computing
-(HPC) sites, have long run times in excess of days, weeks, and even months.
+component failures are a frequent event.  For large parallel simulations at
+LANL, and other High Performance Computing (HPC) sites, which can run for
+several months, restarting a calculation from the beginning is not viable,
+since the mean time to interrupt for today's supercomputers is measured in days
+or hours and not months~\cite{google-failure,schroeder-failure}.  
+
+\input{patterns-fig}
 
 % checkpoint is defense against failure, drives parallel file systems, is
 % challengin
@@ -53,3 +57,4 @@ motivation in Section~\ref{motivation}, describe our design in
 Section~\ref{arch} and our evaluation in Section~\ref{eval}.  We present
 related work in Section~\ref{related}, current status and future work in
 Section~\ref{future}, and finally we conclude in Section~\ref{conclude}.
+

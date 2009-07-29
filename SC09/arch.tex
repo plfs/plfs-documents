@@ -60,7 +60,9 @@ it also introduces additional complexity for reads. In order to read
 the logical file, \plfs\ maintains an \Term{index file} for each compute
 node which records the logical offset and length of each write. \plfs\ can
 then construct a \Term{global index} by aggregating the multiple index files 
-into an offset lookup table.
+into an offset lookup table.  This global offset is constructed as needed to
+satisfy read operations and lookup operations when cached metadata is not
+available (as will be discussed in Section~\ref{arch-meta}).
 
 One difficultly in constructing this global index stems from concurrent
 processes that may write the same offset at the same time.  These processes
