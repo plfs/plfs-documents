@@ -14,8 +14,9 @@ framework for running stackable file systems~\cite{usenix00fist} in
 non-privileged mode.
 
 
-\plfs\ is a virtual file system situated between the parallel application and
-an \upfs\ responsible for the actual data storage. As \plfs\ is a virtual file
+\plfs\ is a virtual FUSE file system, mounted on the compute nodes, situated between the parallel application and
+an \upfs\ responsible for the actual data storage. 
+As \plfs\ is a virtual file
 system, it leverages many of the services provided by the \upfs\ such as
 redundancy, high availability, and a globally distributed data store.  This
 frees \plfs\ to focus on just one specialized task: rearranging application
