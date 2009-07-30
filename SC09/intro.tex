@@ -9,7 +9,7 @@ the petaflop barrier and claimed the top spot on the Top 500 list~\cite{top500}
 with the Roadrunner supercomputer~\cite{roadrunner}.  Due to its unique hybrid
 architecture, Roadrunner has only 3060 nodes, which is a relatively small
 number for a supercomputer of its class.  Unfortunately, even at this size,
-component failures are a frequent event.  For large parallel simulations at
+component failures are frequent.  For large parallel simulations at
 LANL, and other High Performance Computing (HPC) sites, which can run for
 several months, restarting a calculation from the beginning is not viable,
 since the mean time to interrupt for today's supercomputers is measured in days
@@ -33,23 +33,27 @@ parallel file systems and the challenge it imposes grows with each successively
 larger supercomputer~\cite{pcl:99:me,schroeder2007}.  The difficulty of this
 challenge can vary greatly depending on the particular pattern of checkpointing
 chosen by the application. 
-
-% our approach
 In this paper, we describe different checkpointing patterns, and show how some
 result in very poor storage performance on three of the major HPC
-parallel file systems: PanFS, GPFS, and Lustre.  We then posit that an
+parallel file systems: PanFS, GPFS, and Lustre.  
+
+We then posit that an
 interposition layer inserted into the existing storage stack can rearrange this
 problematic access pattern to achieve much better performance from the
 \upfs.  To test this hypothesis, we have developed \plfs, a Parallel
-Log-structured File System, which is one such interposition layer.  We present measurements using \plfs\ on several synthetic benchmarks and real applications at multiple HPC supercomputing centers.  The
+Log-structured File System, one such interposition layer.  We present measurements using \plfs\ on several synthetic benchmarks and real applications at multiple HPC supercomputing centers.  The
 results confirm our hypothesis: writing to the \upfs\ through
 \plfs\ improves checkpoint bandwidth for all tested applications and
 benchmarks and on all three studied parallel file systems; in some cases,
 bandwidth is raised by several orders of magnitude.
 
-As we shall discuss, and is summarized in Figure~\ref{fig-page1}, PLFS is
+As we shall discuss, and is summarized in Figure~\ref{fig-page1}, \plfs\ is
 already showing very large speed ups for widely used HPC benchmarks and
-important real HPC codes, and at extreme scale. 
+important real HPC codes, and at extreme scale.  \plfs\ works on unmodified
+applications as an optional mount point on the compute nodes and is designed to
+augment, and not replace, an existing \upfs.  \plfs\ consists of three thousand
+lines of code and is publically available at
+http://sourceforge.net/projects/plfs.
 
 % the stupid mandatory list of the rest of the paper
 The rest of the paper is organized as follows.  We present more detailed background and

@@ -5,16 +5,17 @@
 
 We present the results of our experimental evaluation in Figure~\ref{fig-eval}.
 Eleven of these twelve graphs present one experiment each. The twelfth,
-Figure~\ref{eval:summary}, presents a summary. In the majority of these graphs,
-the write bandwidth is shown on the \yaxis\ in \MBs\ as a function of the
-number of processes. We will note it in the text for those few graphs for
-which we deviate from this general configuration. The write bandwidth that we
-report is whatever is reported by the particular benchmark; whenever possible,
-we report the most conservative value (\ie\ we include open and close times in
-our write times, and we either barrier after close or we use the time reported
-by the slowest writer). Finally we have attempted to run multiple iterations
-for each experiment; where applicable, the standard deviation is therefore
-included.
+Figure~\ref{eval:summary}, is a summary. In the majority of these graphs, the
+write bandwidth is shown on the \yaxis\ in \MBs\ as a function of the number of
+processes. We will note it in the text for those few graphs for which we
+deviate from this general configuration. The write bandwidth that we report is
+whatever is reported by the particular benchmark; whenever possible, we report
+the most conservative value (\ie\ we include open and close times in our write
+times, and we either barrier after close or we use the time reported by the
+slowest writer). Benchmarks were run on LANL's Roadrunner supercomputer using
+the default parameters unless indicated otherwise.  Finally we have attempted
+to run multiple iterations for each experiment; where applicable, the standard
+deviation is included.
 
 \subsection{MPI-IO Test}
 
@@ -47,7 +48,7 @@ reason for this, there are several reasons why this could be the case. The
 first is that \plfs\ rearranges writes into a log structured pattern so an N-N
 pattern which incurs seeks could do worse than a \plfs\ pattern which appends
 only. Secondly, the structure of the \plfs\ container spreads data across
-multiple sub-directories within a top-level directory whereas a typical N-N
+multiple sub-directories whereas a typical N-N
 pattern confines all N files into only a single parent directory.
 
 Although \plfs\ does improve the bandwidth of N-1 patterns on GPFS and Lustre,
@@ -96,16 +97,15 @@ checkpoint patterns. The application shown in Figure~\ref{eval:lanl1} is the
 application whose developers augmented their checkpoint routine with a new
 checkpoint library called bulkio, which aggregates and buffers writes into
 larger, contiguous writes more friendly to the \upfs. Therefore we compare the
-bulkio method writing directly to PanFS to the old MPI-IO method writing
-indirectly to PanFS via \plfs.  This data was collected on Roadrunner.  The
-next two graphs show similar results; using \plfs\ to rearrange an N-1 pattern
-yields significantly improved bandwidths.  Figure~\ref{eval:lanl2} was run on a
-small \rrz\ which consists of 128 8-core compute nodes with a 66 blade PanFS
-storage system, whereas Figure~\ref{eval:lanl3} was run on Roadrunner itself.
-Note that these are extremely important applications at LANL; it has been
-estimated that they account for more than half of the total computing cycles at
-LANL.  Although these applications must remain anonymous, traces of their IO
-are available~\cite{plfs-maps}.
+bulkio method writing directly to PanFS to the MPI-IO method writing indirectly
+to PanFS via \plfs.  This data was collected on Roadrunner.  The next two
+graphs show similar results; using \plfs\ to rearrange an N-1 pattern yields
+significantly improved bandwidths.  Figure~\ref{eval:lanl2} was run on a small
+\rrz\ which consists of 128 8-core compute nodes with a 66 blade PanFS storage
+system, whereas Figure~\ref{eval:lanl3} was run on Roadrunner itself.  Note
+that these are extremely important applications at LANL, consuming more than
+half of LANL's total cycles.  Although they must remain anonymous, traces of
+their IO are available~\cite{plfs-maps}.
 
 \subsection{NERSC's PatternIO Benchmark}
 
@@ -159,6 +159,7 @@ which was improved in the best case by two orders of magnitude.
 \label{overhead}
 
 \input{overhead-fig}
+\input{read-graphs.tex}
 
 As was seen in
 Figures~\ref{eval:panfs},~\ref{eval:gpfs},~and~\ref{eval:lustre}, N-1 patterns
@@ -207,7 +208,6 @@ We must therefore weigh improvements in
 write bandwidth against possible degradations in other operations. 
 
 \subsubsection{Read Bandwidth}
-\input{read-graphs.tex}
 
 To ensure \plfs\ does not improve write bandwidth at the expense of read
 bandwidth, we ran a set of read experiments on \rrz\ which are shown in
@@ -219,27 +219,26 @@ cases, reads were performed on different nodes than those where the
 corresponding data was written and caches were always flushed between
 successive reads.
 
-We measured the time to read these files using three different read
-scenarios. One emulates a \Term{uniform restart} in which the number of
-processes resuming the application is the same as the number that wrote the
-last checkpoint. In this case, each process within the parallel job reads the
-same data in the same order as one of the previous writers. In
-contrast, a \Term{non-uniform restart} is one in which the number of
-readers is different from the number of writers and the read offsets are
-therefore not aligned with the previous writes. In this case, we emulate the
-scenario where an application resumes after a failure by simply running on the
-newly reduced number of nodes. The number of reads is not affected by the size
-of the job for typical N-1 checkpoints. Each read is extracting a region for a
-particular variable within the simulation. The size of this region depends on
-the number of processes within the job. Each gets $1/Nth$ of the region.
-Specifically, for a non-uniform restart in which the number of processes, $N$,
-has been reduced by $M$, the size of each read will be $N/(N-M)$ times the size
-of the original writes. The third read scenario we emulated is a typical
-scenario in which a relatively, small fixed number of processes reads a
-checkpoint in order to save it onto an archive system. For these measurements,
-we used LANL's archive copy utility with fours readers each running on their
-own node; each reader read just one contiguous 5~\GB\ region by issuing 
-sequential 1~\MB\ reads. 
+We measured the time to read these files using three different read scenarios.
+One emulates a \Term{uniform restart} in which the number of processes resuming
+the application is the same as the number that wrote the last checkpoint. In
+this case, each process reads the same data in the same order as one of the
+previous writers. In contrast, a \Term{non-uniform restart} is one in which the
+number of readers is different from the number of writers and the read offsets
+are therefore not aligned with the previous writes. In this case, we emulate
+the scenario where an application resumes after a failure by simply running on
+the newly reduced number of nodes. The {\em{number}} of reads is not affected
+by the size of the job for typical N-1 checkpoints since each read is
+extracting a region for a particular variable within the simulation. However,
+the {\em{size}} of this region depends on the number of processes within the
+job since each gets $1/Nth$ of the region.  Specifically, for a non-uniform
+restart in which the number of processes, $N$, has been reduced by $M$, the
+size of each read will be $N/(N-M)$ times the size of the original writes. The
+third scenario emulated is where a relatively, small fixed number of processes
+reads a checkpoint in order to save it onto an archive system. For these
+measurements, we used LANL's archive copy utility with fours readers each
+running on their own node; each reader reads a single contiguous 5~\GB\ region
+by issuing sequential 1~\MB\ reads. 
 
 \if 0
 % tempting to say this but we said at the beginning that we wouldn't really

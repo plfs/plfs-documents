@@ -105,7 +105,7 @@ specific canonical order that commonly aggregates related data together in
 contiguous regions, making visualization of intermediate state simple and
 efficient.  Additionally, following a failure, a restart on a different number
 of compute nodes is easier to code as the checkpoint format is independent of
-the number of processes that captured the checkpoint; conversely, gathering the
+the number of processes that wrote the checkpoint; conversely, gathering the
 appropriate regions from multiple files or from multiple regions within a
 single file is more complicated.  
 
@@ -120,24 +120,23 @@ at least ten have an N-1 pattern; two major applications at LANL use an N-1
 checkpointing pattern as do at least two of the eight applications chosen to
 run on Roadrunner during its initial stabilization phase.  N-1 checkpointing is
 very important to these applications.  For example, at the core of one of
-LANL's N-1 applications is a twenty-year old Fortran checkpointing library. 
-About a decade ago, in response to a growing clamor about the
-limitations of N-1 checkpointing bandwidth, developers for this application
-augmented their checkpointing library with fifteen thousand lines of code.
-However, instead of changing the application to write an N-N pattern, they
-added a prefer to the IO routiones in which interprocess communication is used to aggregate and buffer writes.
-Although they did not improve the performance to match that of other 
-applications using an N-N checkpoint pattern, 
-this effort was considered a success as they did improve the N-1
-performance by a factor of two to three. This new checkpointing library,
-called \Term{bulkio}, has been maintained over the past decade and ported to
-each new successive supercomputer at LANL~\cite{bent-personal-bulk}. 
-Furthermore, N-1 patterns continue to be developed anew in many new
-applications.  High level data formatting libraries such as Parallel
-NetCDF~\cite{pnetcdf} and HDF5~\cite{hdf5} offer convenience to application
-developers who simply describes the logical format of their data and need no
-longer consider how that data is physically organized in the file system.  Once
-again this convenience merely shifts the complexity to the \upfs\ 
+LANL's N-1 applications is a twenty-year old Fortran checkpointing library.
+About a decade ago, in response to a growing clamor about the limitations of
+N-1 checkpointing bandwidth, developers for this application augmented their
+checkpointing library with fifteen thousand lines of code.  However, instead of
+changing the application to write an N-N pattern, they added a new IO routine in
+which interprocess communication is used to aggregate and buffer writes.
+Although they did not improve the performance to match that of other
+applications using an N-N checkpoint pattern, this effort was considered a
+success as they did improve the N-1 performance by a factor of two to three.
+This checkpointing library, called \Term{bulkio}, has been maintained over
+the past decade and ported to each new successive supercomputer at
+LANL~\cite{bent-personal-bulk}.  Furthermore, N-1 patterns continue to be
+developed anew in many new applications.  High level data formatting libraries
+such as Parallel NetCDF~\cite{pnetcdf} and HDF5~\cite{hdf5} offer convenience
+to application developers who simply describes the logical format of their data
+and need no longer consider how that data is physically organized in the file
+system.  Once again this convenience merely shifts the complexity to the \upfs\
 since these libraries use an N-1 pattern.
 
 

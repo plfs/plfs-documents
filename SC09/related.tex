@@ -33,6 +33,10 @@ The great strength of this approach is that it can be used by applications that
 have no internal checkpoint mechanism.  A disadvantage is that these
 checkpoints are larger then when an application specifies only the exact data
 that it needs saved.
+Conversely, incremental checkpointing and memory
+exclusion~\cite{pcl:99:me,pxn:95:scd} reduce the size of checkpoint data by
+only saving data that has changed since the previous checkpoint.  Buffering
+with copy-on-write~\cite{li-298215} can also reduce checkpoint latency.
 
 %allows user applications to checkpoint their state, including system
 %resources, without the application programmer having to explicitly code the
@@ -43,10 +47,6 @@ that it needs saved.
 
 %\scribble{Couldn't find the incremental checkpointing reference}
 
-Conversely, incremental checkpointing and memory
-exclusion~\cite{pcl:99:me,pxn:95:scd} reduce the size of checkpoint data by
-only saving data that has changed since the previous checkpoint.  Buffering
-with copy-on-write~\cite{li-298215} can also reduce checkpoint latency.
 
 \input{related-table}
 

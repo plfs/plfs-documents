@@ -65,8 +65,8 @@ into an offset lookup table.  This global offset is constructed as needed to
 satisfy read operations and lookup operations when cached metadata is not
 available (as will be discussed in Section~\ref{arch-meta}).
 
-One difficultly in constructing this global index stems from concurrent
-processes that may write the same offset at the same time.  These processes
+One difficulty in constructing the global index stems from multiple
+processes that may write the same offset concurrently.  These processes
 cannot know which will be the ultimate writer, so they need to synchronize to
 determine the appropriate order. This synchronization needs to be exposed to
 the file system to be effective~\cite{Gibson95thescotch}. If a logical
@@ -75,7 +75,7 @@ could be written to index files so that the merge process could correctly
 determine write ordering. Since parallel applications synchronize with a
 barrier called by all processes, a simple count of synchronization calls could
 be sufficient. In practice checkpoints do not experience overlapping writes, so
-at this time \plfs\ has not implemented an overlap conflict resolution scheme.
+at this time \plfs\ has not implemented overlap resolution.
 
 \scribble{changed language on 'serialization of index writes'. We actually only
 serialize the index offset updates --Milo} 
@@ -88,13 +88,13 @@ systems sends all writes to a single \plfs\ process which ensures index records
 are correctly, chronologically appended.  Having a single index greatly reduces
 the number of files in a container since current LANL applications run up to
 sixteen processes on a node; on the next LANL supercomputer, this could be up
-to sixty-four. We tried reducing the number of data files in the same manner.
+to sixty-four. We tried reducing the number of data files similarly.
 Write bandwidth was not affected, but reads were slowed for \Term{uniform
 restarts} in which reading processes access the file in the same access pattern
 as it was written.  The pattern of a single reader accessing a single data file
 sequentially lends itself very well to prefetching.  However, due to timing
 differences between the write and read phases, multiple processes in a uniform
-restart may not always read from a shared file in sequential order.
+restart may not always read from a shared file sequentially.
 
 Having described the basic operation of \plfs, we now present some of its
 implementation in finer detail.  Although there are many interposition
@@ -120,15 +120,15 @@ FUSE does add some overhead as shown in Section~\ref{eval}.
 
 Because \plfs\ leverages the \upfs\ as much as possible, we give the container
 the same logical name as the \plfs\ file. This allows \plfs\ to pass a
-\syscall{readdir} system call directly to the \upfs\ and return its result to
-the application without any translation.  \plfs\ also handles \syscall{mkdir}
-system calls in the same way (\ie\ without any translation). The implication of
-leveraging the \upfs\ in this way is that \plfs\ requires some other mechanism
-by which to distinguish between regular directories and containers in order to
-implement the \syscall{stat} system call correctly. As the \textit{SUID} bit is
-rarely used on directories and yet is allowed to be set by the underlying file
-system, \plfs\ sets this bit on containers; this does mean, however, that
-\plfs\ must disallow setting this bit on a regular directory. 
+\syscall{readdir} system call directly to the \upfs\ and return its result
+without any translation.  \plfs\ also handles \syscall{mkdir} system calls
+without any translation.  Leveraging the \upfs\ in this way requires that
+\plfs\ use some other mechanism to distinguish between regular directories and
+containers in order to implement the \syscall{stat} system call correctly. As
+the \textit{SUID} bit is rarely used on directories and yet is allowed to be
+set by the underlying file system, \plfs\ sets this bit on containers; the
+implication however is that \plfs\ must disallow setting this bit on a regular
+directory. 
 
 As we discussed previously, parallel applications do synchronized
 checkpointing; the implication for \plfs\ is that multiple processes running on
@@ -176,19 +176,21 @@ timestamps.  And the offset of the last byte is the maximum logical offset
 recorded in any of the index files.
 
 Computing these sums and maximums with every \syscall{stat} call on a \plfs\
-file is expensive. Our strategy for speeding this up is to cache recently
+file is expensive. Our strategy for quickening this is to cache recently
 computed values in the \Term{metadata subdirectory}. To make this cache as
-effective as possible we have each FUSE process cache into this metadata
-subdirectory any information it has in its in memory data structures when the
-last writer on that node closes the file. On this close, the
-FUSE process creates a file named H.L.B.T, where H is the node's hostname, L is
-the last offset recorded on that node, B is the sum of the capacity of all
-files that this node manages, and T is the maximum timestamp among these files.
+effective as possible we have each \plfs\ server cache into this metadata
+subdirectory any information it has in its memory data structures when the last
+writer on that node closes the file. On this close, the FUSE process creates a
+file named \Term{H.L.B.T}, where \Term{H} is the node's hostname, \Term{L} is
+the last offset recorded on that node, \Term{B} is the sum of the capacity of
+all files that this node manages, and \Term{T} is the maximum timestamp among
+these files.
 
 When no process has this container open for write, a stat call on the container
-is implemented by issuing a \syscall{readdir} on the metadata subdirectory,
-then reporting the maximum of the Ls for last byte offset, the maximum of the
-Ts for modification timestamp and the sum of the Bs for capacity.
+issues a \syscall{readdir} on the metadata subdirectory,
+then reports the maximum of the offsets for last byte offset, the maximum of
+the timestamps for modification timestamp and the sum of the blocks for
+capacity.
 
 If one or more processes has the container open for writing, then the
 corresponding cached metadata values could be stale. \plfs\ clients therefore
