@@ -1,0 +1,77 @@
+\documentclass[letterpaper,10pt]{article}
+%\pagestyle{empty}
+\usepackage{graphicx}
+\usepackage{verbatim}
+\usepackage{authblk}
+\usepackage[top=0.75in, bottom=0.75in, left=0.75in, right=0.75in]{geometry}
+
+%\setlength\textheight{9.0in}
+
+
+\title{Enabling Scientific Application I/O on Cloud FileSystems}
+
+\author[1]{Milo Polte (student)}
+\author[2]{Esteban Molina-Estolano (student)}
+\author[3]{John Bent}
+\author[2]{Scott Brandt}
+\author[1]{Garth Gibson}
+\author[4]{Maya Gokhale}
+\author[2]{Carlos Maltzahn}
+\author[3]{Meghan Wingate}
+\affil[1]{Carnegie Mellon University}
+\affil[2]{UC Santa Cruz}
+\affil[3]{Los Alamos National Laboratory}
+\affil[4]{Lawrence Livermore National Laboratory}
+
+\date{}
+
+
+\begin{document}
+
+\bibliographystyle{plain}
+
+\maketitle
+
+    Today, the storage of many of the world's largest computing
+    clusters is being supported not through traditional parallel
+    filesystems, such as Lustre\cite{schwan:linux03}, the Parallel Virtual
+    Filesystem (PVFS)\cite{carns:PVFS}, or PanFS\cite{nagle:sc04}, but
+    through ``cloud'' filesystems such as GoogleFS\cite{ghemawat:gfs},
+    the Hadoop Distributed Filesystem (HDFS)\cite{hdfs}, and the
+    Amazon Simple Storage Service (Amazon S3).\cite{amazons3} Although
+    these filesystems provide appropriate performance and resilience
+    for web apps, their APIs are often unsuitable for the I/O patterns
+    of a scientific application. Scientific applications typically use
+    a POSIX interface, often with additional support for semantics
+    such as concurrent writers or out of order writes. These
+    applications cannot presently run at all on a cloud filesystem,
+    since these filesystems lack the necessary semantics. We would
+    like to remedy this deficiency: running scientific applications on
+    cloud filesystems would allow sites with investments in cloud
+    filesystems to leverage existing hardware to run scientific
+    computing applications as well.
+    
+
+    Previously, the authors have designed a thin interposition layer,
+    the Parallel Log-structured Filesystem (PLFS)\cite{plfs}, to
+    improve the I/O speed of scientific applications running on a
+    parallel filesystem. PLFS transparently decouples inefficient,
+    concurrent writers accessing a shared file into efficient,
+    log-style writers maintaining individual data files, while still
+    providing the application with a view of a single, flat file.
+
+    Although this previously work was motivated by performance rather
+    than enabling functionality, we believe the same techniques can be
+    adapted to support concurrent writers in a cloud filesystem. In
+    this work, we will extend PLFS to run on the Hadoop filesystem and
+    add shared write semantics to it. This will enable scientific
+    applications, such as simulation checkpointing, to run unmodified
+    on top of the Hadoop filesystem. We plan to compare the
+    performance against the same scientific apps running on PVFS (a
+    common parallel filesystem used at National Labs) on the same
+    hardware and evaluate the trade-offs in performance. 
+
+
+\bibliography{references}
+
+\end{document}
