@@ -1,9 +1,29 @@
 % macros to use in the text
+\newcommand{\TITLE}{PLFS Roadmap}
 \newcommand{\mds}{metadata distribution layer}
 \newcommand{\fuse}{PLFS-FUSE}
 \newcommand{\adio}{PLFS-ADIO}
 \newcommand{\store}{back-end store}
 \newcommand{\plfsrc}{\Path{/etc/plfsrc}}
+
+%\newcommand{\summary}[1]{\framebox[6in]{#1}}
+
+\newcommand{\compatibility}[1]{\subsection{Compatibility}{#1}}
+\newcommand{\version}[2]{\subsection{Version #1 Summary}{#2}}
+
+\newcommand{\policy}[1]{\summary{Policy Decision}{#1}}
+\newcommand{\policyq}[1]{\summary{Policy Question}{#1}}
+\newcommand{\implementation}[1]{\summary{Implementation Decision}{#1}}
+\newcommand{\implementationq}[1]{\summary{Implementation Question}{#1}}
+
+\newcommand{\summary}[2]{
+	\begin{center}
+    \begin{tabular}[h!]{|p{0.8\textwidth}|}
+    \hline
+    {\bf #1}\\\hline
+    #2    \\\hline
+    \end{tabular}
+\end{center}}
 
 \def\sourcetabsize{2}
 \newenvironment{sourcestyle}{\begin{scriptsize}}{\end{scriptsize}}

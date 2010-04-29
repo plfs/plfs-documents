@@ -1,34 +1,16 @@
-NAME = plfs_devel
-BIB  = bibtex
+NAME = plfs_roadmap
 
-SRCS = ${wildcard *.tex}
+PDF  = $(NAME).pdf
+SRCS = $(wildcard *.tex)
 
-FIGURESRC = ${wildcard figs/*.fig}
-FIGURES = ${FIGURESRC:.fig=.pdf}
+all: $(PDF)
 
-PS  = $(NAME).ps
-PDF = $(NAME).pdf
-
-all: $(PS)
-
-pdf: $(PDF)
-
-%.pdf: %.eps 
-	epstopdf $<
-
-%.eps: %.fig
-	fig2dev -L eps < $< > $@
-
-$(PS): $(SRCS) $(FIGURES)
+$(PDF): $(SRCS) 
 	pdflatex $(NAME)
-	#$(BIB) -min-crossrefs=100 $(NAME)
-	#pdflatex $(NAME)
-	#latex $(NAME)
-	#latex $(NAME)
-	#dvips -t letter $(NAME) -o $(NAME).ps
+	pdflatex $(NAME)
 
 spell:
 	latexspell *.tex
 
 clean:
-	rm -f *~ *.aux *.bbl *.blg *.dvi *.ps *.pdf *.log *.toc *.lof figs/*.eps
+	rm -f *~ *.aux *.bbl *.blg *.dvi *.ps *.pdf *.log *.toc *.lof 

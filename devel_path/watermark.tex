@@ -1,3 +1,5 @@
+\usepackage{eso-pic,type1cm,color}
+
 \makeatletter
 \AddToShipoutPicture{%
 \setlength{\@tempdimb}{.5\paperwidth}%
@@ -5,7 +7,7 @@
 \setlength{\unitlength}{1pt}%
 \put(\strip@pt\@tempdimb,\strip@pt\@tempdimc){%
 \makebox(200,-730){{\textcolor[gray]{0.5}%
-{\fontsize{.3cm}{.3cm}\selectfont{\plfs\ Versioning Plan, \today}}}}
+{\fontsize{.3cm}{.3cm}\selectfont{\TITLE, \today}}}}
 }%
 }
 \makeatother
