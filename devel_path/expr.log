@@ -1,0 +1,458 @@
+This is pdfTeX, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2010.3.10)  28 APR 2010 13:24
+entering extended mode
+**expr
+(./expr.tex
+LaTeX2e <2005/12/01>
+Babel <v3.8h> and hyphenation patterns for english, usenglishmax, dumylang, noh
+yphenation, arabic, basque, bulgarian, coptic, welsh, czech, slovak, german, ng
+erman, danish, esperanto, spanish, catalan, galician, estonian, farsi, finnish,
+ french, greek, monogreek, ancientgreek, croatian, hungarian, interlingua, ibyc
+us, indonesian, icelandic, italian, latin, mongolian, dutch, norsk, polish, por
+tuguese, pinyin, romanian, russian, slovenian, uppersorbian, serbian, swedish, 
+turkish, ukenglish, ukrainian, loaded.
+(./IEEEtran.cls
+Document Class: IEEEtran 2007/03/05 V1.7a by Michael Shell
+-- See the "IEEEtran_HOWTO" manual for usage information.
+-- http://www.michaelshell.org/tex/ieeetran/
+\@IEEEtrantmpdimenA=\dimen102
+\@IEEEtrantmpdimenB=\dimen103
+\@IEEEtrantmpcountA=\count79
+\@IEEEtrantmpcountB=\count80
+\@IEEEtrantmptoksA=\toks14
+LaTeX Font Info:    Try loading font information for OT1+ptm on input line 366.
+
+(/opt/local/share/texmf-dist/tex/latex/psnfss/ot1ptm.fd
+File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
+)
+-- Using 8.5in x 11in (letter) paper.
+-- Using PDF output.
+\@IEEEnormalsizeunitybaselineskip=\dimen104
+-- This is a 10 point document.
+\CLASSINFOnormalsizebaselineskip=\dimen105
+\CLASSINFOnormalsizeunitybaselineskip=\dimen106
+\IEEEnormaljot=\dimen107
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <5> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <5> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <7> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <8> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <8> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <9> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <9> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <10> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <11> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <11> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <12> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <17> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <17> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <20> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <20> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <24> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 724.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <24> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 724.
+\IEEEilabelindentA=\dimen108
+\IEEEilabelindentB=\dimen109
+\IEEEilabelindent=\dimen110
+\IEEEelabelindent=\dimen111
+\IEEEdlabelindent=\dimen112
+\IEEElabelindent=\dimen113
+\IEEEiednormlabelsep=\dimen114
+\IEEEiedmathlabelsep=\dimen115
+\IEEEiedtopsep=\skip41
+\c@section=\count81
+\c@subsection=\count82
+\c@subsubsection=\count83
+\c@paragraph=\count84
+\c@IEEEsubequation=\count85
+\abovecaptionskip=\skip42
+\belowcaptionskip=\skip43
+\c@figure=\count86
+\c@table=\count87
+\@IEEEeqnnumcols=\count88
+\@IEEEeqncolcnt=\count89
+\@IEEEtmpitemindent=\dimen116
+\c@IEEEbiography=\count90
+\@IEEEtranrubishbin=\box26
+) (/opt/local/share/texmf-dist/tex/latex/preprint/fullpage.sty
+Package: fullpage 1999/02/23 1.1 (PWD)
+\FP@margin=\skip44
+)
+(/opt/local/share/texmf-dist/tex/latex/setspace/setspace.sty
+Package: setspace 2000/12/01 6.7 Contributed and Supported LaTeX2e package
+
+Package: `setspace' 6.7 <2000/12/01>
+) (/opt/local/share/texmf-dist/tex/latex/geometry/geometry.sty
+Package: geometry 2002/07/08 v3.2 Page Geometry
+
+(/opt/local/share/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
+\KV@toks@=\toks15
+)
+\Gm@cnth=\count91
+\Gm@cntv=\count92
+\c@Gm@tempcnt=\count93
+\Gm@bindingoffset=\dimen117
+\Gm@wd@mp=\dimen118
+\Gm@odd@mp=\dimen119
+\Gm@even@mp=\dimen120
+\Gm@dimlist=\toks16
+
+(/opt/local/share/texmf-dist/tex/xelatex/xetexconfig/geometry.cfg))
+(/opt/local/share/texmf-dist/tex/latex/wrapfig/wrapfig.sty
+\wrapoverhang=\dimen121
+\WF@size=\dimen122
+\c@WF@wrappedlines=\count94
+\WF@box=\box27
+\WF@everypar=\toks17
+Package: wrapfig 2003/01/31  v 3.6
+)
+(/opt/local/share/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/opt/local/share/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2006/02/20 v1.0o Standard LaTeX Graphics (DPC,SPQR)
+
+(/opt/local/share/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+(/opt/local/share/texmf/tex/latex/config/graphics.cfg
+File: graphics.cfg 2007/01/18 v1.5 graphics configuration of teTeX/TeXLive
+)
+Package graphics Info: Driver file: pdftex.def on input line 90.
+
+(/opt/local/share/texmf-dist/tex/latex/pdftex-def/pdftex.def
+File: pdftex.def 2007/01/08 v0.04d Graphics/color for pdfTeX
+\Gread@gobject=\count95
+))
+\Gin@req@height=\dimen123
+\Gin@req@width=\dimen124
+)
+(/opt/local/share/texmf-dist/tex/latex/sidecap/sidecap.sty
+Package: sidecap 2003/06/06 v1.6f SideCap Package (RN/HjG)
+
+(/opt/local/share/texmf-dist/tex/latex/base/ifthen.sty
+Package: ifthen 2001/05/26 v1.1c Standard LaTeX ifthen package (DPC)
+)
+\SC@BOXWD=\dimen125
+\SC@CAPWD=\dimen126
+\SC@tempdima=\dimen127
+\SC@tempdimb=\dimen128
+\c@SC@C=\count96
+\SC@BOX=\box28
+)
+(/opt/local/share/texmf-dist/tex/latex/subfig/subfig.sty
+Package: subfig 2005/06/28 ver: 1.3 subfig package
+
+(/opt/local/share/texmf-dist/tex/latex/caption/caption.sty
+Package: caption 2007/01/07 v3.0k Customising captions (AR)
+
+(/opt/local/share/texmf-dist/tex/latex/caption/caption3.sty
+Package: caption3 2007/01/07 v3.0k caption3 kernel (AR)
+\captionmargin=\dimen129
+\captionmarginx=\dimen130
+\captionwidth=\dimen131
+\captionindent=\dimen132
+\captionparindent=\dimen133
+\captionhangindent=\dimen134
+)
+Package caption Info: sidecap package v1.4d (or newer) detected on input line 4
+16.
+)
+\c@KVtest=\count97
+\sf@farskip=\skip45
+\sf@captopadj=\dimen135
+\sf@capskip=\skip46
+\sf@nearskip=\skip47
+\c@subfigure=\count98
+\c@subfigure@save=\count99
+\c@lofdepth=\count100
+\c@subtable=\count101
+\c@subtable@save=\count102
+\c@lotdepth=\count103
+\sf@top=\skip48
+\sf@bottom=\skip49
+)
+(/opt/local/share/texmf-dist/tex/latex/eso-pic/eso-pic.sty
+Package: eso-pic 2006/07/14 v1.1d eso-pic (RN)
+
+(/opt/local/share/texmf-dist/tex/latex/everyshi/everyshi.sty
+Package: everyshi 2001/05/15 v3.00 EveryShipout Package (MS)
+))
+(/opt/local/share/texmf-dist/tex/latex/type1cm/type1cm.sty
+Package: type1cm 2002/09/05 v0.04 BlueSky/Y&Y Type1 CM font definitions (DPC, p
+atched RF)
+)
+(/opt/local/share/texmf-dist/tex/latex/graphics/color.sty
+Package: color 2005/11/14 v1.0j Standard LaTeX Color (DPC)
+
+(/opt/local/share/texmf/tex/latex/config/color.cfg
+File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
+)
+Package color Info: Driver file: pdftex.def on input line 130.
+)
+(/opt/local/share/texmf-dist/tex/latex/listings/listings.sty
+\lst@mode=\count104
+\lst@gtempboxa=\box29
+\lst@token=\toks18
+\lst@length=\count105
+\lst@currlwidth=\dimen136
+\lst@column=\count106
+\lst@pos=\count107
+\lst@lostspace=\dimen137
+\lst@width=\dimen138
+\lst@newlines=\count108
+\lst@lineno=\count109
+\c@lstlisting=\count110
+\lst@maxwidth=\dimen139
+
+(/opt/local/share/texmf-dist/tex/latex/listings/lstpatch.sty
+File: lstpatch.sty 2004/10/17 1.3b (Carsten Heinz)
+)
+(/opt/local/share/texmf-dist/tex/latex/listings/lstmisc.sty
+File: lstmisc.sty 2004/09/07 1.3 (Carsten Heinz)
+\c@lstnumber=\count111
+\lst@skipnumbers=\count112
+\lst@framebox=\box30
+)
+(/opt/local/share/texmf-dist/tex/latex/listings/listings.cfg
+File: listings.cfg 2004/09/05 1.3 listings configuration
+))
+Package: listings 2004/10/17 1.3b (Carsten Heinz)
+
+(/opt/local/share/texmf-dist/tex/latex/listings/lstlang1.sty
+File: lstlang1.sty 2004/09/05 1.3 listings language file
+) (./macros.tex
+\captwidth=\skip50
+\captsize=\skip51
+)
+(./watermark.tex) (./expr.aux
+
+LaTeX Warning: Label `nonrandom' multiply defined.
+
+
+LaTeX Warning: Label `sub@nonrandom' multiply defined.
+
+
+LaTeX Warning: Label `random' multiply defined.
+
+
+LaTeX Warning: Label `sub@random' multiply defined.
+
+
+LaTeX Warning: Label `random-full' multiply defined.
+
+
+LaTeX Warning: Label `sub@random-full' multiply defined.
+
+)
+\openout1 = `expr.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+-------------------- Geometry parameters
+paper: class default
+landscape: --
+twocolumn: true
+twoside: --
+asymmetric: --
+h-parts: 56.9055pt, 500.484pt, 56.9055pt
+v-parts: 56.9055pt, 681.15898pt, 56.9055pt
+hmarginratio: --
+vmarginratio: --
+lines: --
+heightrounded: --
+bindingoffset: 0.0pt
+truedimen: --
+includehead: --
+includefoot: --
+includemp: --
+driver: pdftex
+-------------------- Page layout dimensions and switches
+\paperwidth  614.295pt
+\paperheight 794.96999pt
+\textwidth  500.484pt
+\textheight 681.15898pt
+\oddsidemargin  -15.36449pt
+\evensidemargin -15.36449pt
+\topmargin  -15.36449pt
+\headheight 0.0pt
+\headsep    0.0pt
+\footskip   28.90755pt
+\marginparwidth 20.0pt
+\marginparsep   10.0pt
+\columnsep  12.0pt
+\skip\footins  10.79993pt plus 4.79993pt minus 2.39996pt
+\hoffset 0.0pt
+\voffset 0.0pt
+\mag 1000
+\@twocolumntrue 
+(1in=72.27pt, 1cm=28.45pt)
+-----------------------
+ (/opt/local/share/texmf-dist/tex/context/base/supp-pdf.tex
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count113
+\scratchdimen=\dimen140
+\scratchbox=\box31
+\nofMPsegments=\count114
+\nofMParguments=\count115
+\MPscratchCnt=\count116
+\MPscratchDim=\dimen141
+\MPnumerator=\count117
+\everyMPtoPDFconversion=\toks19
+) (/opt/local/share/texmf-dist/tex/latex/ragged2e/ragged2e.sty
+Package: ragged2e 2003/03/25 v2.04 ragged2e Package (MS)
+
+(/opt/local/share/texmf-dist/tex/latex/everysel/everysel.sty
+Package: everysel 1999/06/08 v1.03 EverySelectfont Package (MS)
+LaTeX Info: Redefining \selectfont on input line 125.
+)
+\CenteringLeftskip=\skip52
+\RaggedLeftLeftskip=\skip53
+\RaggedRightLeftskip=\skip54
+\CenteringRightskip=\skip55
+\RaggedLeftRightskip=\skip56
+\RaggedRightRightskip=\skip57
+\CenteringParfillskip=\skip58
+\RaggedLeftParfillskip=\skip59
+\RaggedRightParfillskip=\skip60
+\JustifyingParfillskip=\skip61
+\CenteringParindent=\skip62
+\RaggedLeftParindent=\skip63
+\RaggedRightParindent=\skip64
+\JustifyingParindent=\skip65
+)
+Package caption Info: listings package v1.2 (or newer) detected on input line 2
+0.
+Package caption Info: subref 1.2 or 1.3 detected on input line 20.
+LaTeX Info: Redefining \subref on input line 20.
+
+ABD: EveryShipout initializing macros (./title.tex
+
+LaTeX Warning: No \author given.
+
+
+LaTeX Warning: No \author given.
+
+) (./abstract.tex) (./intro.tex (./arch-fig.tex
+<figs/planning.pdf, id=1, 489.83pt x 204.765pt>
+File: figs/planning.pdf Graphic file (type pdf)
+ <use figs/planning.pdf>
+<figs/arch.pdf, id=2, 488.82625pt x 218.8175pt>
+File: figs/arch.pdf Graphic file (type pdf)
+ <use figs/arch.pdf>))
+(./arch.tex [1{/opt/local/share/texmf/fonts/map/pdftex/updmap/pdftex.map}
+
+
+]
+(./cg-example.tex (./examples/mdtest.py
+LaTeX Font Info:    Try loading font information for OMS+ptm on input line 5.
+
+(/opt/local/share/texmf-dist/tex/latex/psnfss/omsptm.fd
+File: omsptm.fd 
+)
+LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <8> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 5.
+)
+(./examples/mdtest.out))
+Underfull \hbox (badness 2951) in paragraph at lines 56--70
+[]\OT1/ptm/m/n/10 HExMan pro-vides an ex-per-i-ment man-ager pro-gram
+ []
+
+[2 <./figs/planning.pdf> <./figs/arch.pdf>]
+<dbvizGraphsAndConfigs/screenShot.png, id=23, 1447.4075pt x 906.38625pt>
+File: dbvizGraphsAndConfigs/screenShot.png Graphic file (type png)
+
+<use dbvizGraphsAndConfigs/screenShot.png>
+Underfull \vbox (badness 2460) has occurred while \output is active []
+
+ [3]
+(./dbviz-fig.tex
+<dbvizGraphsAndConfigs/allPoints.jpg, id=29, 1094.0875pt x 627.34375pt>
+File: dbvizGraphsAndConfigs/allPoints.jpg Graphic file (type jpg)
+
+<use dbvizGraphsAndConfigs/allPoints.jpg>
+<dbvizGraphsAndConfigs/allPointsAllScatter.jpg, id=30, 1095.09125pt x 503.8825p
+t>
+File: dbvizGraphsAndConfigs/allPointsAllScatter.jpg Graphic file (type jpg)
+ <use dbvizGraphsAndConfigs/allPointsAllScatter.jpg>
+<dbvizGraphsAndConfigs/allPointsBarGraph.jpg, id=31, 1093.08376pt x 496.85625pt
+>
+File: dbvizGraphsAndConfigs/allPointsBarGraph.jpg Graphic file (type jpg)
+ <use dbvizGraphsAndConfigs/allPointsBarGraph.jpg>) [4 <./dbvizGraphsAndConfigs
+/screenShot.png>]) (./eval.tex (./table.tex) [5 <./dbvizGraphsAndConfigs/allPoi
+nts.jpg> <./dbvizGraphsAndConfigs/allPointsAllScatter.jpg> <./dbvizGraphsAndCon
+figs/allPointsBarGraph.jpg>] (./random.tex
+<dbvizGraphsAndConfigs/pointsLTE4.jpg, id=39, 1094.0875pt x 622.325pt>
+File: dbvizGraphsAndConfigs/pointsLTE4.jpg Graphic file (type jpg)
+
+<use dbvizGraphsAndConfigs/pointsLTE4.jpg>
+<dbvizGraphsAndConfigs/random4Pts.jpg, id=40, 1096.095pt x 498.86375pt>
+File: dbvizGraphsAndConfigs/random4Pts.jpg Graphic file (type jpg)
+
+<use dbvizGraphsAndConfigs/random4Pts.jpg>
+File: dbvizGraphsAndConfigs/allPoints.jpg Graphic file (type jpg)
+
+<use dbvizGraphsAndConfigs/allPoints.jpg>)) (./related.tex) (./future.tex
+[6]
+Underfull \vbox (badness 2073) has occurred while \output is active []
+
+)
+(./conclude.tex) (./bib.tex (./expr.bbl [7 <./dbvizGraphsAndConfigs/pointsLTE4.
+jpg> <./dbvizGraphsAndConfigs/random4Pts.jpg>])) [8
+
+] (./expr.aux)
+
+LaTeX Warning: There were multiply-defined labels.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 4484 strings out of 94073
+ 69566 string characters out of 1164797
+ 152887 words of memory out of 1500000
+ 7659 multiletter control sequences out of 10000+50000
+ 41797 words of font info for 78 fonts, out of 1200000 for 2000
+ 645 hyphenation exceptions out of 8191
+ 43i,11n,42p,263b,1322s stack positions out of 5000i,500n,6000p,200000b,5000s
+{/opt/local/share/texmf-dist/fonts/enc/dvips/base/8r.enc}</opt/local/share/te
+xmf-dist/fonts/type1/bluesky/cm/cmsy7.pfb></opt/local/share/texmf-dist/fonts/ty
+pe1/bluesky/cm/cmsy8.pfb></opt/local/share/texmf-dist/fonts/type1/urw/times/utm
+b8a.pfb></opt/local/share/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></opt/lo
+cal/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></opt/local/share/texmf-d
+ist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on expr.pdf (8 pages, 603407 bytes).
+PDF statistics:
+ 72 PDF objects out of 1000 (max. 8388607)
+ 0 named destinations out of 1000 (max. 131072)
+ 41 words of extra memory for PDF output out of 10000 (max. 10000000)
+

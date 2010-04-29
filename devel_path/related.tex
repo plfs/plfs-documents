@@ -1,0 +1,48 @@
+\section{Related Work}
+\label{related}
+
+\name\ introduces a new way to manage experiments in a HPC environment, greatly
+simplifying the experimental process.  \name\ submits and executes jobs, parses
+the results, inserts them into a database, and allows the user to graphically
+and interactively view the results. Similar efforts can be found, but none
+offer the holistic approach of \name\ nor its HPC focus.
+
+GridBot~\cite{gridbot} is a system for executing experiments across multiple
+grids and clusters. Its high-level goal is very similar to \name; both systems
+are designed to ease the burden of computational scientists to manage very
+large experiments with many \subs\ (\subs\ in GridBot are called \Term{Bags of
+Tasks}). GridBot's focus however is on dispatch; its dispatch engine is
+designed for the Grid however where the dispatcher in \name\ is designed for an
+HPC environment.  Focused on dispatch, GridBot lacks any analogues for
+transducers, \dbviz, or the ability to monitor and replay experiments.
+Ultimately, the two systems are highly complementary: \name\ provides
+end-to-end experiment management for HPC; combining it with the grid-aware
+dispatching in GridBot would enable end-to-end experiment management for the
+Grid.  
+
+VGrADS~\cite{vgrads} is a similar approach that provides a virtualized Grid
+execution system; like GridBot, it is geared for the Grid whereas \name\ is
+geared for HPC. VGrADS also attempts to provide reliable quality of service and
+fault tolerance using automated task replication.  These features complement
+\name's more holistic approach.  
+
+Zoo~\cite{livny-zoo} is another experiment management framework for desktop
+computing.  Similar in concept to \name\, it acknowledges the experiment
+feedback loop and provides a framework for making the experimental
+process more manageable.  Zoo has modules, such as Opossum and Frog, for each step of the process, from designing and setting up experiments through data
+collection and analysis.  Although novel for its time, Zoo, and its focus on
+the desktop, provides insufficient management for the much more complex HPC
+environment.  In addition, Zoo lacks the advanced features of \dbviz, such
+as outlier analysis and hidden difference search.
+
+GridDB~\cite{griddb} provides a data-centric overlay to process-centric grid
+middleware.  The key differences between \name\ and GridDB exist in how they
+handle data processing and analysis.  GridDB uses a declarative interface and
+type checking to deal with data processing and interactive query processing to
+support analysis.  These techniques offer flexibility, but they also make the
+data more abstract.  \name\ uses transducers to convert experimental results
+into usable data.  Transducers are slightly less flexible, but they help to
+maintain the raw form of the data.  \dbviz\ offers easier data analysis and
+\name\ seeks to keep data processing and analysis more decoupled by using
+transducers and \dbviz.  \name\ provides a larger end-to-end focus whereas
+GridDB offers a greater emphasis on automated computational steering.

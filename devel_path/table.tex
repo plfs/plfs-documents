@@ -1,0 +1,23 @@
+\begin{table*}[tb]
+\centering
+\begin{tabular}{|lrrr|}
+\hline
+TEST & Description Lines & Keys Collected & Transducer Lines \\
+\hline
+mdtest & 48 & 88 & 200 \\
+ior & 45 & 101 & 143 \\
+LANL fs\_test & 36 & 149 & 2 \\
+\hline
+\end{tabular}
+\mycaption{eval-table}{Defining Experiments.}{
+This table shows how many lines are necessary to describe typical parameter
+sweeps for three different applications which are currently using \name\ at
+LANL.  It also shows the number of \kv\ pairs collected from each \sub, and the
+lines needed for the application-specific transducers which parse the output of
+each \sub\ and produce these \kv\ pairs.  The LANL fs\_test transducer is so
+small because LANL fs\_test already produces output in \kv\ format so that
+transducer simply echoes its input to its output.  The other transducers are
+larger because those applications do not have consistent output formatting so
+every \kv\ must be parsed differently. 
+}
+\end{table*}
