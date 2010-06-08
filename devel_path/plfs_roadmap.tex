@@ -381,5 +381,44 @@ just \adio}
 \item{which version to push for production}
 \end{itemize}
 
+OK.  Here the current plan:
+
+\begin{itemize}
+\item{global mkdir for logical directories}
+\item{local mkdir for container directories hashed by node name}
+\item{local create for files hashed by node name}
+\item{global parallel metadata ops (including things like chmod)}
+\end{itemize}
+
+The global parallel metadata ops do leave us vulnerable to crashes.  We
+need a new term to explain this.  With striping across volumes, on an
+N-1 write workload, we'll have multiple nodes each create
+"subcontainers" on different volumes.  Each subcontainer will be created
+in exactly the same way that containers are created now.  On a read,
+PLFS will aggregate the indices from all the subcontainers and construct
+a global view of the container.  So the consistency problem is that we
+crash halfway through a chmod.  Each subcontainer will have an
+accessfile that holds its permissions.  When we go to aggregate the
+subcontainers' permissions into the permissions for the container, we'll
+discover that they are not consistent.  I guess in this specific case,
+we'll just use the strictest.  If the user is surprised, they'll just do
+a chmod again to fix it.  I'll have to think whether worse problems
+occur for other possible inconsistencies.
+
+\definition{Subcontainer}{If multiple nodes each create containers for
+the same logical file on different volumes, each of these is actually
+a \Term{subcontainer} and the logical aggregated view is a \Term{container}.
+To aggregate a view of a container, \plfs\ will look across all {\store}s
+for subcontainers for that container.}
+
+By the way, we used to use the link idea back before I stripped the
+volume striping out.  This work by hashing the container itself by name
+and the hostdirs within were hashed by node and then lazily linked in to
+the container.  You could do the link at create time but then there is a
+parallel open storm.  This avoided the consistency problem and made
+lookups easier.  It also meant that the read worked for free.  In the
+above approach, we might have to modify the global index build since the
+data droppings are striped across multiple directories.  But I didn't
+like that approach since lazily linking in the hostdirs was complicated.
 
 \end{document}
