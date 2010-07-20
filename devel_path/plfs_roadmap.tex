@@ -1,7 +1,10 @@
 \documentclass[10pt]{article}
 \usepackage{fullpage}
-
+\usepackage[pdftex]{graphics}
 \usepackage{enumitem}
+\usepackage{subfig}
+\usepackage{amsmath}
+\usepackage{alltt}
 \setlist{noitemsep,topsep=0pt}
 \setitemize{noitemsep,topsep=0pt}
 \setenumerate{noitemsep,topsep=0pt} 
@@ -108,13 +111,9 @@ decided that we will use an \Path{/etc/plfsrc} file on every node to declare
 mappings between logical paths and {\store}s.  This file will be parsed by both
 \fuse\ and \adio.
 
-However, one problem is that we can no longer depend on symbolic links to
-spread users across volumes.  We can either put all {\store}s on a single
-volume or we can put a mapping entry into \plfsrc\ for every user
-(\eg\ \Path{/plfs/ben} maps to \Path{/panfs/scratch/vol5/ben/.plfs\_store}).
-This might be a maintenance problem however as every time a new user is
-added, every \plfsrc\ file will need to be updated.  I don't know
-the administrative cost of this.
+Figures~\ref{fig-conf}~and~\ref{fig-mapping} show how the mapping function
+can be defined such that the same logical path will be resolved to the same
+physical path on the \upfs.
 
 Once we have both an \adio\ and a \fuse\ layer, we quickly can identify 
 many optimizations possible in the \adio\ layer that aren't possible in the
@@ -123,6 +122,42 @@ layer so that the \plfs\ daemons could communicate with each other but we're
 not going to do that.]  These optimizations will be discussed in more detail
 in Section~\ref{sec-adio-opt}.  This difference between the \adio\ and \fuse\
 layers raises an important policy consideration:
+
+\begin{figure}[t]
+\centering
+\begin{tabular}{ p{3in} p{3in}}
+\input{config.tex}
+&
+\input{admin.tex}
+\\
+\centering a) Configuration File & b) Administrator Script 
+\end{tabular}
+\mycaption{fig-conf}{Shared Mappings.}{On the left is an example \plfsrc\
+file listing various parameters used to control the behavior within
+the PLFS library.  Of interest here is how the mapping works to find a physical
+location from a logical path.  The hashing function itself works by turning
+the username into the uid and then taking the modulus of the uid and the
+number of backends and then using that result as an index into the backend
+array.  Note that the complexity of the hashing algorithm will really just
+exist in the PLFS library but is shown here for the sake of expediency.  
+Notice also that this method distributes each user's metadata workload 
+to a different metadata server.  Of course, the entire metadata workload
+for each individual user is isolated on a single metadata server.  We will
+fix this in Version~2.
+The right shows the script that an administrator
+can use to setup the necessary directories.  The \$user\_list is defined to
+be all users during initial creation and then set to be just a single user
+when a new user is added.}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics{mapping.png}
+\mycaption{fig-mapping}{Path Resolution in Shared Mappings.}{This figure
+shows how the same logical path resolves in both \fuse\ and \adio\ to the
+same path on the \upfs.  We assume that the \plfsrc\ used is that shown
+in Figure~\ref{fig-conf}.}
+\end{figure}
 
 \policyq{Many complicated issues can be easily resolved in the \adio\ layer.
 Should we concentrate our efforts there and only support \fuse\ for
@@ -136,14 +171,14 @@ high performance POSIX file system interface.  Perhaps we should follow their
 lead. 
 
 \version{1}{Version 1 will have both the \fuse\ and \adio\ layers and a mapping
-within the library layer will hide {\store}s from the users.  With a simple
-map file, all \plfs\ metadata for all users will go to a single PanFS director.
-With a more complicated map, each user's metadata workload will go to different
-directors.}
-
-\policyq{Use a simple map and no metadata distribution or a complicated map
-which spreads metadata workloads across PanFS directors?  Or skip Version 1
-in favor of Version 2?}
+within the library layer will hide {\store}s from the users.  
+Path resolution in both \fuse\ and \adio\ will share the same mapping such
+that the same logical path presented to both will resolve to the same
+physical path on the \upfs.
+Each user's metadata workload will be isolated on one of a set of metadata
+servers such that simultaneous workloads from multiple users will be spread
+across multiple metadata servers.
+}
 
 \compatibility{Version 1 will be backwards compatible with Version 0.}
 
