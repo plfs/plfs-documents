@@ -1,0 +1,440 @@
+\documentclass[10pt]{article}
+\usepackage{fullpage}
+
+\usepackage{enumitem}
+\setlist{noitemsep,topsep=0pt}
+\setitemize{noitemsep,topsep=0pt}
+\setenumerate{noitemsep,topsep=0pt} 
+
+\input{macros}
+\input{watermark}
+
+\begin{document}
+
+\title{\TITLE}
+\if 0
+\author{
+    John Bent,
+    Ryan Kroiss,
+    Alfred Torrez,
+    Meghan Wingate
+    \\
+    Los Alamos National Lab
+}
+\fi
+\date{}
+\maketitle
+\thispagestyle{empty}
+\pagestyle{empty}
+\section{Preface}
+
+This document attempts to lay out a design path for the planned development
+versions of \plfs.  It also attempts to describe how development versions can
+move into production and the various issues for transitioning between versions.
+Some of the issues are technical and some are policy.  Some of the technical
+issues are things like how do we implement directory management in the future
+\mds.  Policy issues are questions like whether incompatible layouts are 
+handled transparently by \plfs\ or whether they are handled by explicitly
+copying data from an old \plfs\ into the new one.  
+
+Our goal is to get \plfs\ into production at LANL.  However, we want to make 
+sure that the production releases are bug-free, give performance attractive
+to users, and are as easy to use as possible.  Hopefully by spelling out the
+issues involved the current version of \plfs\ and the planned versions, we
+can identify the target version for our first production release.  There is
+of course a tension between releasing something soon and releasing something
+good.  We could release the current version today but it has several 
+limitations that will be discussed below and we need to determine whether
+we are comfortable with those limitations.
+
+At the end of this document, we will also describe current open issues
+and other miscellaneous development plans.
+
+\section{Current Version - Version 0}
+
+The current version has support for both \fuse\ and for \adio.  However, the
+\fuse\ implementation transparently maps logical paths into physical ones.  It
+knows this mapping via a single mount argument naming the physical \store.  To
+balance metadata workloads across PanFS director blades, each user's \plfs\
+\store\ is located on a different PanFS volume.  This is accomplished via
+symbolic links.  For example, \Path{/plfs/ben} is a symbolic link to
+\Path{/mnt/plfs/vol5/ben/.plfs\_store}.  When \plfs\ is mounted, it is mounted
+on \Path{/mnt/plfs} and directed to use \Path{/panfs/scratch} as its \store.
+So a typical name resolution would work as follows:
+
+\begin{enumerate}
+\item{user ben opens logical file \Path{/plfs/ben/foo}}
+\item{the sym link resolves this to logical path 
+        \Path{/mnt/plfs/vol5/ben/.plfs\_store}}
+\item{FUSE strips the \Path{/mnt/plfs} and \plfs\ inserts the \store\ path 
+        and resolves to physical path 
+        \Path{/panfs/scratch/vol5/ben/.plfs\_store}}
+\end{enumerate}
+
+This works great for \fuse: the \store\ is hidden from the user.  However, for
+\adio, there is no current support for mapping so when a user wants to use
+\adio, they need to know and use the path to their \store.  We have observed
+that users are confused by the notion of the \store\ and therefore we believe
+that the \adio\ in the current version is not ready for a production release. 
+
+\policy{
+We need to hide the \store\ from users.  Therefore an \adio\ layer
+without a transparent mapping cannot be included in a production release.
+}
+
+We can have a production release with just \fuse, but Meghan has observed much
+higher bandwidth with the \adio\ layer and believes that the bandwidth with 
+just the \fuse\ layer might not be enough to convince users to switch.  
+
+\policyq{Can we release a production version with just \fuse\ and not \adio?}
+
+Recently, the developer of Bulk-IO has improved its bandwidth by tuning its 
+IO to match the underlying stripe configuration of PanFS.  Although the
+performance of \fuse\ is better than Bulk-IO it is not several times better
+whereas the performance of \adio\ is. 
+
+\version{0}{Version 0 has only a \fuse\ layer (\ie\ no \adio\ layer) with a
+simple mapping to the \store\ and balances metadata load via symbolic links
+external to \plfs\ placing each user on a different volume.}
+
+\section{Shared Mappings - Version 1}
+
+Version 1 will move the mapping logic from \fuse\ into the library so it will
+be shared with \adio.  However, we can no longer rely on the mount argument to
+declare the \store\ as that is not seen by \adio.  We could use the mount
+argument for \fuse\ and use hints for \adio\ but this exposes the \store\ to
+users and we have already decided we don't want to do that.  Therefore, we have
+decided that we will use an \Path{/etc/plfsrc} file on every node to declare
+mappings between logical paths and {\store}s.  This file will be parsed by both
+\fuse\ and \adio.
+
+However, one problem is that we can no longer depend on symbolic links to
+spread users across volumes.  We can either put all {\store}s on a single
+volume or we can put a mapping entry into \plfsrc\ for every user
+(\eg\ \Path{/plfs/ben} maps to \Path{/panfs/scratch/vol5/ben/.plfs\_store}).
+This might be a maintenance problem however as every time a new user is
+added, every \plfsrc\ file will need to be updated.  I don't know
+the administrative cost of this.
+
+Once we have both an \adio\ and a \fuse\ layer, we quickly can identify 
+many optimizations possible in the \adio\ layer that aren't possible in the
+current \fuse\ layer.  [Of course, we could consider extending the \fuse\
+layer so that the \plfs\ daemons could communicate with each other but we're
+not going to do that.]  These optimizations will be discussed in more detail
+in Section~\ref{sec-adio-opt}.  This difference between the \adio\ and \fuse\
+layers raises an important policy consideration:
+
+\policyq{Many complicated issues can be easily resolved in the \adio\ layer.
+Should we concentrate our efforts there and only support \fuse\ for
+functionality and access from the front-ends?  Should we even bother putting
+\fuse\ on compute nodes?  Can \fuse\ even work on Cielo?  If it can't work
+on Cielo, then we just make inconsistent user environments by putting it on
+Roadrunner.}
+ 
+PVFS has decided to concentrate on the ADIO layer and not attempt to provide a
+high performance POSIX file system interface.  Perhaps we should follow their
+lead. 
+
+\version{1}{Version 1 will have both the \fuse\ and \adio\ layers and a mapping
+within the library layer will hide {\store}s from the users.  With a simple
+map file, all \plfs\ metadata for all users will go to a single PanFS director.
+With a more complicated map, each user's metadata workload will go to different
+directors.}
+
+\policyq{Use a simple map and no metadata distribution or a complicated map
+which spreads metadata workloads across PanFS directors?  Or skip Version 1
+in favor of Version 2?}
+
+\compatibility{Version 1 will be backwards compatible with Version 0.}
+
+\section{Distributed Metadata - Version 2}
+
+A better way to distribute users across volumes is for the \plfsrc\ to list
+multiple {\store}s (where each is on a different volume) for each logical path.
+Then, instead of relying on symbolic links as in Version~0, or complicated
+mapping files as in Version~1, \plfs\ itself will load balance metadata
+workloads by hashing every file and placing it on a different \store.  In fact,
+this is even better than the crude balancing in Versions~0 and 1 because {\em
+every file} is placed on a different volume as opposed to every user. 
+
+In order to do the full \mds\ implementation, we need to decide on mechanisms
+for file creation and for directory creation.  
+
+\subsection{File Creation}
+
+File creation seems straight-forward: choose a \store\ and create the file
+there.  One open question is how to choose the \store\ on which to create a
+particular file.  One approach is to hash the filename, another is to hash the
+name of the node.  Although we discuss directory creation in detail below in
+Section~\ref{sec-dir}, I want to introduce two basic approaches since the
+selection of the directory creation approach influences some of the trade-offs
+in the file creation.  One directory creation approach is to eagerly create
+each directory on every \store.  Another is to just create each directory on a
+single \store\ and then replicate lazily whenever needed.
+
+\implementationq{Place files by hashing file name or node name?}
+
+\begin{itemize}
+\item{Place files by hashing on the file name}
+\begin{itemize}
+\item{Will distribute metadata for
+a single client workload.  But this isn't really our target and I doubt the
+metadata load from a single client benefits much from distribution anyway.
+}
+\item{File lookups are easy because we know where to look for the file.}
+\item{Intuitively this seems bad for N-1 workloads because all access to the
+file will be directed to a single \store.  However, remember that in \plfs\
+there are no N-1 workloads (\ie\ each container dropping will be hashed to
+a different \store).}
+\item{Although every container dropping is hashed to a different \store, the
+container itself is hashed to just a single \store\
+(if we use lazy directory creation).  Therefore in a large N-1 workload,
+every node will try to create the same container in the same location.}
+\item{There might be more network contention since every client potentially
+interacts with every director}
+\end{itemize}
+\item{Place files by hashing on the node name}
+\begin{itemize}
+\item{File lookups must search every \store.} 
+\item{Buffering might work better and there might be less network contention
+since every client interacts with just a single director} 
+\end{itemize}
+\end{itemize}
+
+\subsection{Archive Workloads}
+
+Gary Grider did a bunch of measurements on an HB machine and sent email on
+August 3, 2010 about this.  The archive workload consists of a small number of
+processes running on a small number of nodes reading a file in 500 MB strides.
+When the file was created with a large number of writers, the time to open it
+for reads (\ie\ the time to aggregate the index chunks into a global offset
+lookup table) becomes large.  We added multi-threading to deal with this and
+it helps but we anticipate that for Cielo-scale machines, these thread pools
+will be insufficient and we'll need to solve this with index squashing.  Also,
+the read bandwidth itself is OK for files created with 500K writes but runs
+slowly for files created with 50K writes.  Specifically, it reads at about
+a third of the bandwidth that files can be read directly from Panasas.  We
+don't know what to do about this at the current time but this doesn't need
+to be solved for Roadrunner and may not prove to be a problem even for Cielo.
+ 
+\subsection{Directory Creation}
+\label{sec-dir}
+
+First remember that there are two types of directories within \plfs.  There are
+the logical directories created by users and then there are the directories
+created within \plfs\ containers.  
+
+\implementationq{Should we treat logical directories and directories within
+containers in the same way?}
+
+It's tempting to place the directory logic and the file logic and all the
+mapping logic in a layer below \plfs.  This means that logical directories
+and container directories are handled in the same way.  However, handling
+these different types of directories in the same way will probably cause
+performance degradations.  If we violate the layering and handle these
+differently then the below question of whether to do eager or lazy creation
+is easy.  We do eager creation for logical directories and lazy creation
+for container directories.
+
+If we treat logical directories and container directories in the same way, then
+we have to decide whether to eagerly create an instance of each directory on
+every \store\ or whether to lazily create each instance whenever it is needed
+to store a child entry.
+
+\implementationq{Eagerly replicate directories across every \store\ or
+lazily whenever needed to store a child entry?}
+
+\begin{itemize}
+\item{lazy directory creation}
+\begin{itemize}
+\item{Creating a child entry might require that the parent directory be
+created first.  In order to do so, the other {\store}s must be searched
+in order to ensure that the parent directory is valid.  This can recurse.  
+In fact when Ben and I did a whiteboard
+session we saw that this would happen frequently in container creation 
+when the files were placed by hashing on the file name.}
+\end{itemize}
+\item{eager directory creation}
+\begin{itemize}
+\item{This could be really problematic in an N-1 workload on \fuse\ because 
+every client would be trying to create the container on every \store. Most
+attempts would fail and I believe a failed \syscall{mkdir} should be faster
+than a successful one.}
+\item{This could be even more problematic for N-N workloads in both \fuse\
+and \adio\ because every client would successfully create a container on
+every \store.}
+\item{Failures during a \syscall{mkdir} operation could leave the file system
+in an inconsistent state.  We probably still require the mechanism that
+we create missing parent directories as needed.}
+\end{itemize}
+\end{itemize}
+
+The more I think about this, the more I believe that:
+
+\implementation{Logical directories should be replicated eagerly and 
+container directories should be replicated lazily.}
+
+\version{2}
+
+Version 2 has built-in metadata distribution which works by spreading
+files and directories across multiple {\store}s.  Since each store can
+be a separate PanFS volume and since each PanFS volume is serviced by 
+a different director, this approach distributes the metadata workload 
+across multiple metadata servers: an approach that has been heretofore
+difficult to achieve in PanFS.
+
+Version 2 will probably replicate logical directories eagerly and
+container directories lazily.  Given this, we should re-evaluate the
+decision about how to select the \store\ on which to place newly created
+files and container directories.  Probably if it wasn't late and I wasn't
+tired, I might consider re-ordering these subsections and discussing 
+directory creation first.  I feel that treating the logical directories and
+container directories differently is the right appraoch although I was
+initially reluctant to do it due to increased implementation complexity.
+
+Now that I feel comfortable with that decision, the file placement decision
+should be easier.  
+
+\begin{itemize}
+\item{Place by hashing on file or container directory path}
+\begin{itemize}
+\item{Parent dirs might need to be created}
+\item{Lookup can go directly to the correct \store}
+\item{The set of {\store}s in a map cannot ever change}
+\end{itemize}
+\item{Place by hashing on nodename}
+\begin{itemize}
+\item{Parent dirs should always exist}
+\item{Lookup must search every \store}
+\item{The set of {\store}s in a map can change}
+\end{itemize}
+\end{itemize}
+
+\compatibility{Version~2 may not be backward compatible.  Older versions
+will definitely not be able to read Version~2 containers.  Version~2 may be
+able to read containers created by older versions.  If we choose placement
+by hashing on nodename, then Version~2 will look for files in all {\store}s.
+This will be somewhat unnecessary since all the files will be located in
+just a single \store\ but it will work.}
+
+\section{Open issues and miscellaneous plans}
+
+\subsection{Container identification}
+
+Container identification is a pain in the butt but it's very important because 
+without it \plfs\ has no way to distinguish between a container and a logical
+user-created directory.  We have currently 
+identified three possible container identification mechanisms:  
+
+{\bf 1) SUID.}  We can set the SUID bit on the container.  However, PVFS, HDFS,
+and possibly other global file systems do not support the SUID bit on 
+directories.  We have also seen that some users like to set the SUID bit on
+their directories.  If they did this on a directory stored in \plfs, then the
+next time they tried to access that directory, \plfs\ would mistakenly export
+it as a container.  Also, there is no way to atomically create a directory 
+with the SUID bit set.  Therefore in order to use this mechanism, we must
+create a temporary directory, set the SUID bit, and then rename it.
+
+{\bf 2) Use a specially named file within the container.}  We can create and
+check for a specially named file within the container.  This also runs the risk
+that a user creates a directory with an entry that happens to match our
+specially named file which would cause \plfs\ to mistakenly export that
+directory as a container.  Using a specially named file is the current
+mechanism in \plfs~0.1.6 and it is set to be \Path{.plfsaccess113918400} so the
+possibility of this accident happening seems unlikely.  This mechanism is also
+not atomic and therefore requires a temporary directory which must be renamed.
+
+However, we have recently seen a bug where \plfs\ is failing to create a file;
+when it tries to create a dropping in the container, it incorrectly identifies
+the container as a logical directory (\ie\ the container identification is
+failing).  This might be a \plfs\ bug but right now it appears more likely that
+it is a cache coherency problem in PanFS.  One node has created a temporary
+directory, created the specially named file within, and has renamed the
+temporary directory to the correct container path.  Another node checks that
+correct container path and finds a directory {\em without} the specially named
+file.  
+
+{\bf 3) Container name mangling.}  A third mechanism would be to mangle the
+names of containers (\eg\ when a user creates logical file \Path{foo}, \plfs\
+creates a directory named \Path{foo.plfscontainer113918400}).  This has the
+advantage that it is atomic and therefore doesn't require temporary
+directories.  But the disadvantage is that we need to unmangle these names on
+\syscall{readdir}, we need to check for the mangled name on \syscall{mkdir},
+and we need to check for both the mangled and unmangled names on
+\syscall{stat}.  This can also add weird consistency issues if a logical
+directory and a container of the same name are simultaneously created on
+different nodes.  Hmmm.  Actually that's a problem with the other mechanisms as
+well.  Stupid users.
+
+\subsection{\adio\ optimizations}
+\label{sec-adio-opt}
+
+All sorts of stuff about when and whether to flatten and replicate indices.
+And questions about how to read indices.  Indices could be globablly
+constructed by subsets of the rank reading subsets of the index files and then
+broadcasting to create the global index.  
+
+\subsubsection{Gary's ADIO ideas}
+Gary's written a bunch about this.
+Here is his email (sorry I haven't formatted it nicely yet):
+
+\input{gary-squash}
+
+
+\section{Final thoughts}
+
+I feel like I can identify a path forward.  Deciding to eagerly replicate
+logical directories and lazily replicate container directories hugely
+simplifies things.  However, we still need to decide 
+
+\begin{itemize}
+\item{whether to place files and 
+container directories by hashing their paths or by hashing the node names.  
+}
+\item{whether to attempt to optimize both the \adio\ and \fuse\ layers or
+just \adio}
+\item{whether to run \fuse\ on compute nodes or just front-ends}
+\item{which version to push for production}
+\end{itemize}
+
+OK.  Here the current plan:
+
+\begin{itemize}
+\item{global mkdir for logical directories}
+\item{local mkdir for container directories hashed by node name}
+\item{local create for files hashed by node name}
+\item{global parallel metadata ops (including things like chmod)}
+\end{itemize}
+
+The global parallel metadata ops do leave us vulnerable to crashes.  We
+need a new term to explain this.  With striping across volumes, on an
+N-1 write workload, we'll have multiple nodes each create
+"subcontainers" on different volumes.  Each subcontainer will be created
+in exactly the same way that containers are created now.  On a read,
+PLFS will aggregate the indices from all the subcontainers and construct
+a global view of the container.  So the consistency problem is that we
+crash halfway through a chmod.  Each subcontainer will have an
+accessfile that holds its permissions.  When we go to aggregate the
+subcontainers' permissions into the permissions for the container, we'll
+discover that they are not consistent.  I guess in this specific case,
+we'll just use the strictest.  If the user is surprised, they'll just do
+a chmod again to fix it.  I'll have to think whether worse problems
+occur for other possible inconsistencies.
+
+\definition{Subcontainer}{If multiple nodes each create containers for
+the same logical file on different volumes, each of these is actually
+a \Term{subcontainer} and the logical aggregated view is a \Term{container}.
+To aggregate a view of a container, \plfs\ will look across all {\store}s
+for subcontainers for that container.}
+
+By the way, we used to use the link idea back before I stripped the
+volume striping out.  This work by hashing the container itself by name
+and the hostdirs within were hashed by node and then lazily linked in to
+the container.  You could do the link at create time but then there is a
+parallel open storm.  This avoided the consistency problem and made
+lookups easier.  It also meant that the read worked for free.  In the
+above approach, we might have to modify the global index build since the
+data droppings are striped across multiple directories.  But I didn't
+like that approach since lazily linking in the hostdirs was complicated.
+
+\end{document}

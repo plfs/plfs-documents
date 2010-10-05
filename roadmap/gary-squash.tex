@@ -1,0 +1,164 @@
+The \plfs\ library needs to support something like this functionality:
+
+\begin{enumerate}
+\item{ I have this open fd, please give me the local map for
+this fd (this is not for the entire map, it is for my part
+only
+parms: open fd, pointer that the lib would put an address of some
+space the lib mallocs where it puts the map part, and a length of
+the map part}
+\item{ please store this squashed entire map in this
+specified subcontainer
+parms: fd, address of map, length of map, container to store}
+\item{ mark the metadata for this fd as successfully squashed and distributed
+this tells the lib to put a metadata dropping in
+parms: fd}
+
+\item{ using this consolidated set of map blobs , make me a squashed map
+parms: addr of consolidated map blobs, length of consolidatd map blobs,
+addr to put squashed map, length of resultant squashed map}
+
+\item{ is there a metadata dropping that this has been squashed and
+distributed for this file and where are the locations one might
+look for a replica - this gives a valid list of places where
+indexes live and whether or not there is a valid squashed index
+(subcontainers),
+may need an fd and file path version of this or a flag for lookup type
+parms: file path, fd, addr for lib to put location list, length of list}
+
+\item{ open for read with squashed index replica location or a squashed map
+provided in memory
+parms: open stuff plus replica location or map squashed provided}
+\end{enumerate}
+
+So an mpi-io adio app on would do "something like" this:
+\\
+open for write
+\\
+write stuff
+\\
+on close for write "this close for write" is a bit of a complication"
+(I include frees required by the lib - other malloc/free would
+be required by the adio layer itself)
+- all would ask for their fd (local) index blob  (new func 1)
+ (I suppose we didnt write anything is a possible outcome)
+\\
+- all reduce these local index blobs to proc 0
+\\
+- proc 0 calls using these parts make me a squashed map (new func 4)
+\\
+- proc 0 calls is there squashed metadata for this file
+  which gives proc 0 a list of subcontainers (new func 5)
+\\
+- proc 0 assigns work (squashed map and subcontainer) to get
+  all the squashed maps distributed
+\\
+- all workers call please store this squashed map in this subcontainer
+(new func 2)
+\\
+- all free the blobs local blobs (allocated by the lib)
+\\
+- proc 0 frees squashed map (allocated by the lib)
+\\
+- all but proc 0 barrier
+\\
+- proc 0 mark metadata for this fd as successfully squashed and
+replicated  (new func 3)
+\\
+- proc 0 barrier
+\\
+- all call close
+
+So you can see that the lib doesnt do any mpi magic and the adio (or
+app) doesnt know what is in the map or a subcontainer, they are just
+blobs of data used to distribute, because it has the distribution
+mechanism.
+
+You notice that the distribution of the squashed indexes to
+the brethren does not just blindly do a broadcast and write
+the index, because you might want to write fewer indexes
+than procs.
+
+So this gets the index squashed on close for write by adio.
+We might want a hint on whether you want squashed indexes
+on this mpi run so you could avoid this if you dont want/need
+it.  Probably should plan on that up front even if we dont
+want to use it.
+
+Now the adio on open for read would
+proc 0 in the adio layer would check to see if there
+is there a valid squashed index and get the location list  (new func 5)
+\\
+--if valid squashed index
+\\
+----  assign replicas to the brethren
+\\
+---- everyone opens using that squashed index  (few func 6 using
+subcontainer)
+\\
+--if there is no valid squashed index
+\\
+---- proc 0 has a list of places where indexes live - from the query for
+squash above - even though there is no squashed index,
+\\
+---- proc zero assigns work to the brethren (may not be equal number of
+workers and number of indexes to read),
+\\
+---- each proc does open read with their index part assigned (new func 6
+using subcontainer)
+\\
+---- get local map (new func 1)
+\\
+---- send it back to proc 0,
+\\
+---- when proc 0 gets them all it calls build me a squashed index from
+these parts into the lib (new func 4)
+\\
+---- broadcast resultant squashed map to all,
+\\
+---- everyone opens with squashed map provided (new func 6 - using mem
+map) (I suppose you could write the squashed maps to disk here but that
+seems bad on a read op)
+
+adio close on read has nothing much to do maybe frees or something,
+again you could write the squashed indexes here but on a read
+that is probably bad
+
+A stand alone mpi utility to squash would then:
+\\
+- just be an mpi program that open rw (because it is open for read it
+would efficiently get the squashed map with as many procs as you have
+available - doesnt have to match the number of containers) - everyone
+would end up with a copy of the fully squashed map
+\\
+- close for rw  (Because this is a close for write the squashed indexes
+are written)
+
+A stand alone non mpi utility to squash would be essentially the same
+thing as what the mpi open for rw and close for write is, but
+the farm out the work would be a loop to do the work and not to assign
+the work, or maybe do it with threads where there was procs, which
+would make the stand alone utility to be basically the same as the mpi
+utility.
+
+Again, this close for read/close for write seems to be a slight
+complication, but maybe an important capability.
+
+Of course this is all notional, but
+
+\begin{enumerate}
+\item{this seems doable}
+\item{works where num subcontainers doesnt equal num procs}
+\item{leverages mpi flie open and close}
+\item{gets us easy stand alone mpi and non mpi squasher}
+\item{nearly optimal for mpi and helps posix hugely}
+\end{enumerate}
+
+Now the posix open for read does something similar to
+what proc zero and the other procs do, it would need
+to call the same sorts of routines.  It would probably
+just need to randomly pick a subcontainer to
+do the open with container for squashed index.
+The posix close probably wouldnt do a squash, as it
+wont know when people are done and how to do it and
+who else is doing it etc.

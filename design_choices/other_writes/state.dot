@@ -1,0 +1,17 @@
+
+digraph G
+{
+  //bgcolor="transparent"
+  //edge [fontname="FreeSans",fontsize="10",labelfontname="FreeSans",labelfontsize="10"]
+  node [fontname="FreeSans",fontsize="12",shape=record]
+  edge [fontname="FreeSans",fontsize="12"]
+  A [label="Can user A allow user B to write her files?"]
+  B [label="User A cannot give write permissions to other users"]
+  C [label="Two ways to implement"]
+  D [label="After B writes to A's file, \nA must chmod or chown the file before being able to unlink it"]
+  E [label="If B can read A's file, \nB can overwrite droppings on the understore"]
+  A -> B [label="No"]
+  A -> C [label="Yes"]
+  C -> D
+  C -> E 
+}

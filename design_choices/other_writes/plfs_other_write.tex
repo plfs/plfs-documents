@@ -1,0 +1,101 @@
+\documentclass[10pt]{article}
+\usepackage{fullpage}
+\usepackage[pdftex]{graphics}
+\usepackage{enumitem}
+\usepackage{subfig}
+\usepackage{amsmath}
+\usepackage{alltt}
+\setlist{noitemsep,topsep=0pt}
+\setitemize{noitemsep,topsep=0pt}
+\setenumerate{noitemsep,topsep=0pt} 
+
+\addtolength{\textwidth}{.5in}
+\addtolength{\hoffset}{-.25in}
+\addtolength{\textheight}{.5in}
+\addtolength{\voffset}{-.5in}
+
+\input{macros}
+%\input{watermark}
+
+\begin{document}
+
+\vspace{-1in}
+\title{PLFS Policy Regarding Writes by Others}
+\if 0
+\author{
+    John Bent,
+    Ryan Kroiss,
+    Alfred Torrez,
+    Meghan Wingate
+    \\
+    Los Alamos National Lab
+}
+\fi
+\date{}
+\maketitle
+\thispagestyle{empty}
+\pagestyle{empty}
+\vspace{-1.5cm}
+
+PLFS files are physically stored in a directory structure.  This creates some
+difficulty since the UNIX permissions work differently on directories than they
+do on files.  We would like to access the security protections of the 
+underlying file system (\store) as much as possible but we might occasionally
+have to attempt some enforcement ourselves.  Of course, this opens a security 
+hole since the physical files on the \store\ cannot be hidden.  
+
+One particular thorny problem is allowing users to grant write permissions to
+other users on their files (writes by others).  We can disallow this but if
+we'd like to export a file system with capabilities that users are accustomed
+to, than we might try to support this.  A state diagram depicting possible
+policy decisions is shown in Figure~\ref{fig-state}.
+
+Our first option is to just disallow writes by others.  This is easy
+to implement and will not allow any unauthorized access on the \store.  To
+implement this, we merely remove write permissions for the group and
+for others ({\tt \ie\ mode \& (!(S\_IWGRP|S\_IWOTH))})
+
+\begin{figure}[h]
+\centering
+\includegraphics{state.png}
+\mycaption{fig-state}{Possible Policies in Regards to Writes by Others.}{This 
+state diagram depicts the different policies and their implications in regards
+to whether and how PLFS can support owners of files granting write permissions
+on those files to other users or groups.}
+\end{figure}
+
+If we want to allow writes by others, there are two ways in which we can 
+implement this.  The first way is that when \droppings\ are created inside
+\plfs\ {\container}s, they are created with permissions as defined by the 
+{\tt mode\_t} passed to the {\tt open()} call.  The problem with this 
+approach is that when user B writes to A's file, \droppings\ will be created
+in A's container with permissions that may not allow A access to them.
+This could prevent A from unlinking the file or potentially even reading the
+file if B's {\tt mode\_t} is very restrictive.  To somewhat ameliorate this
+problem, when A later does a {\tt chmod()} or a {\tt chown()} on the file 
+through \fuse\ when \fuse\ is run as root, \fuse\ will recurse through the
+file and restore ownership of all \droppings\ to A.  So A can eventually
+have full access to the file after doing a {\tt chmod()} or {\tt chown()}.
+
+The third approach, and the approach taken by Version 1.0.0, is for all
+\droppings\ to always be created with full permissions (\ie\ ({\\tt
+ (S\_IRWXU|S\_IRWXG|S\_IRWXO)}) which allows A to easily remove any 
+\droppings\ created by B.  We then attempt to limit permissions by
+setting the permissions of all directories within the \container\ 
+appropriately.  The drawback of this approach is that if A gives B read
+permissions on the file, then the \droppings\ will be globally writable
+and the directories will allow B read access.  Therefore B cannot 
+create new droppings but can overwrite and truncate existing droppings.
+We explicitly check for this and prevent this for access through \fuse,
+but this does allow B unauthorized access through the \store.
+
+Given these constraints and our desire to make a filesystem conforming
+the most closely to user expectations and given the lack of obvious
+visibility to the \store, we have currently chosen to use the third
+approach in Version 1.0.0.  This allows write by others and allows
+the original owner full access to their files after write by others
+without any intermediate steps such as {\tt chmod()} or {\tt chown()}.
+This does allow unauthorized overwriting on the \store\ when an other
+has only read access.
+
+\end{document}
