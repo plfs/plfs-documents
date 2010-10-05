@@ -87,15 +87,18 @@ permissions on the file, then the \droppings\ will be globally writable
 and the directories will allow B read access.  Therefore B cannot 
 create new droppings but can overwrite and truncate existing droppings.
 We explicitly check for this and prevent this for access through \fuse,
-but this does allow B unauthorized access through the \store.
+but this does allow B unauthorized access through the \store.  However,
+given how we implement {\tt chmod()} and {\tt chown()} as described
+above, user A can {\tt chmod()} and {\tt chown()} the file and this
+will close the hole on the \store.
 
-Given these constraints and our desire to make a filesystem conforming
-the most closely to user expectations and given the lack of obvious
-visibility to the \store, we have currently chosen to use the third
-approach in Version 1.0.0.  This allows write by others and allows
-the original owner full access to their files after write by others
-without any intermediate steps such as {\tt chmod()} or {\tt chown()}.
-This does allow unauthorized overwriting on the \store\ when an other
-has only read access.
+Given these constraints and our desire to make a filesystem conforming the most
+closely to user expectations and given the lack of obvious visibility to the
+\store, we have currently chosen to use the third approach in Version 1.0.0.
+This allows write by others and allows the original owner full access to their
+files after write by others without any intermediate steps such as {\tt
+chmod()} or {\tt chown()}.  This does allow unauthorized overwriting on the
+\store\ when an other has only read access but only until the owner does a {\tt
+chmod()} or {\tt chown()}.
 
 \end{document}
