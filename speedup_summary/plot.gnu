@@ -27,7 +27,7 @@ set label "150" at 8,168 center
 set label "12" at 11,15 center
 set label "5" at 14,5.5 center
 set label "28" at 17,33 center
-set label "2" at 20,2.5 center
+set label "12" at 20,15 center
 set label "58" at 23,65 center
 set label "7" at 26,8 center
 set label "83" at 29,92 center
