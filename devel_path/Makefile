@@ -5,7 +5,9 @@ SRCS = $(wildcard *.tex)
 
 all: $(PDF)
 
-$(PDF): $(SRCS) mapping.png
+# $(PDF): $(SRCS) mapping.png
+
+$(PDF): $(SRCS) # mapping.png
 	pdflatex $(NAME)
 	pdflatex $(NAME)
 
