@@ -1,0 +1,69 @@
+FEATURE:
+Add Write Buffering to PLFS
+
+MOTIVATION:
+
+PLFS, as originally developed, did not need write buffering bec it was designed
+to work with the PanFS client.  Since the PanFS client does buffering for 
+N-N workloads, it did not really hurt performance for PLFS to issue small
+writes.  In this case, each small write is just a memory copy into the PanFS 
+client which then did it's own buffering and thereby ensured that only large
+writes were sent off the compute node.
+
+However, the days in which PLFS can rely on a file system client on the compute
+node are numbered.  Most current machines, and almost certainly all exascale
+machines, do not and will not have file system clients on the compute nodes.
+Rather, they will have some sort of a forwarding layer like IOFSL or Cray's
+DVS.  This will also be true of systems incorporating burst buffers.  In these
+cases, when PLFS issues small writes, this can very much hurt performance since
+each small write will be sent off the compute node.
+
+Therefore, we want PLFS internally to buffer writes and attempt to issue only
+large writes as much as possible.  For burst buffer systems and for exascale 
+machines, this will help performance significantly.  In fact, LANL is already
+even seeing impacted performance due to small writes from PLFS on it's
+Cielo supercomputer which has the DVS forwarding layer. 
+
+EXPECTED ENGINEERING EFFORT:  Low
+
+PLANNED IMPLEMENTATION:
+
+Create a new class called PhysicalFile that has the following functions: 
+
+new PhysicalFile(const string &path, mode_t, int flags);  // does the open
+size_t write( /* just like POSIX */);
+size_t read ( /* just like POSIX */);
+sync(/*POSIX*/);
+~PhysicalFile();  // does the last flush if necessary and the close
+
+Go through the code and replace every single place that does Util::Open with
+new PhysicalFile.  There should be only one single place in the code that calls
+Util::Open and that's inside PhysicalFile::PhysicalFile().  Then of course
+change all the reads and writes and closes to use PhysicalFile functions.
+
+There may be places in ad_plfs that do opens of physical files.  I believe
+if there are any, they are just for reading.  Ensure this and then let's
+ignore them for now.
+
+Also, the constructor should allocate a buffer of some size that defaults to
+256 MB and is configurable in the plfsrc with a new key write_buffer_sz_mbs.
+The man page for plfsrc also must be modified to describe this new key.
+
+Writes to the PhysicalFile should just do memcopies into the buffer.  Flush
+when it fills, and on close and sync if there is data in it.  If an
+incoming write will exceed the buffer, then fill the buffer with the first
+part of the write, flush, and then copy the remainder of the write into the
+buffer.
+
+TEST PLAN:  
+
+Figure out some way to actually count the disk operations such as iostat.  Run
+the current PLFS code that doesn't buffer with fs_test doing small writes and
+see how many disk operations are incurred.  Do this through both ADIO and FUSE.
+Then repeat this with the buffering PLFS and ensure that the disk operations
+are reduced as expected.
+
+Make sure that Util::Open is called from only the PhysicalFile::PhysicalFile()
+function and no where else.
+
+Make sure that 'man plfsrc' describes the new key write_buffer_sz_mbs.
