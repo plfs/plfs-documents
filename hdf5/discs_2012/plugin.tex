@@ -3,7 +3,7 @@ It stores every HDF5 object in a separate file/directory, so that data from diff
 The central object store in HDF5, the HDF5 file, is represented by a directory. Groups are stored as directories as well, whereas datasets, which contain raw data, are stored in files. 
 The relationship between objects is explained by the relative paths between the objects at the file system level. As an example, the HDF5 object D1 which in HDF5's B-tree format can be represented as /G1/G2/D1 is stored on the file system as /path-to-hdf5-file/G1/G2/D1. This way , the plugin eliminates the need to store the metadata describing the relationship between objects. Metadata about datasets, such as the datatype, extent, dimensions etc., are stored as PLFS Xattributes (xattrs) as explained in the previous section. 
 
-Consider the example shown figure 1. Using the plugin, file test.h5 is stored as a directory. Groups G1, G2, G3 are represented as directories at the paths /tmp/test.h5/G1, /tmp/test.h5/G2 , /tmp/test.h5/G1/G3/ respectively. Datasets D1 and D2 are files stored under their respective groups. 
+Consider the example shown in figure~\ref{hdf5_example}. Using the plugin, file test.h5 is stored as a directory. Groups G1, G2, G3 are represented as directories at the paths /tmp/test.h5/G1, /tmp/test.h5/G2 , /tmp/test.h5/G1/G3/ respectively. Datasets D1 and D2 are files stored under their respective groups. 
 
 This approach gives us the ability to distinguish HDF5 objects at the file system level, without requiring an HDF5 application to provide information about objects and the relationship between them. 
 We can now perform post-processing and semantic analysis on the data, outside the scope of the HDF5 application. 

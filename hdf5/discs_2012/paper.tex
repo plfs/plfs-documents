@@ -48,7 +48,7 @@
 \ifCLASSOPTIONcompsoc
   % IEEE Computer Society needs nocompress option
   % requires cite.sty v4.0 or later (November 2003)
-  % \usepackage[nocompress]{cite}
+   \usepackage[nocompress]{cite}
 \else
   % normal IEEE
   % \usepackage{cite}
@@ -751,6 +751,8 @@ HDF5, PLFS, semantic analysis
 \input{background}
 \section{Plugin}
 \input{plugin}
+\section{Evaluation}
+\input{evaluation}
 % Computer Society journal papers do something a tad strange with the very
 % first section heading (almost always called "Introduction"). They place it
 % ABOVE the main text! IEEEtran.cls currently does not do this for you.
@@ -896,7 +898,8 @@ HDF5, PLFS, semantic analysis
 
 
 
-%\section{Conclusion}
+\section{Conclusion}
+\input{conclusion}
 %The conclusion goes here.
 
 
@@ -931,7 +934,8 @@ HDF5, PLFS, semantic analysis
 % use section* for acknowledgement
 %\ifCLASSOPTIONcompsoc
   % The Computer Society usually uses the plural form
- % \section*{Acknowledgments}
+  \section*{Acknowledgments}
+  \input{acknowledgements}
 %\else
   % regular IEEE prefers the singular form
  % \section*{Acknowledgment}
@@ -964,9 +968,10 @@ HDF5, PLFS, semantic analysis
 % http://www.ctan.org/tex-archive/biblio/bibtex/contrib/doc/
 % The IEEEtran BibTeX style support page is at:
 % http://www.michaelshell.org/tex/ieeetran/bibtex/
-%\bibliographystyle{IEEEtran}
+\bibliographystyle{IEEEtran}
 % argument is your BibTeX string definitions and bibliography database(s)
-%\bibliography{IEEEabrv,../bib/paper}
+%\bibliography{IEEEabrv,paper}
+\bibliography{paper}
 %
 % <OR> manually copy in the resultant .bbl file
 % set second argument of \begin to the number of references
