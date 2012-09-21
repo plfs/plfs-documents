@@ -1,0 +1,4 @@
+Using HDF5's virtual object layer, we have developed a new plugin that makes use of PLFS for improved I/O performance. We deviate from HDF5's native file format and store data in a way that allows us to perform useful post-processing independently on HDF5 objects. 
+Such a format can further allow us to incorporate semantic analysis of data for burst buffer type workloads. 
+Initial results show that our plugin consistently performs better than regular MPI-IO, whereas MPI-IO when used with PLFS's MPI-IO driver shows the best results. 
+

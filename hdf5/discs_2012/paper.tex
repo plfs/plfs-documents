@@ -49,6 +49,7 @@
   % IEEE Computer Society needs nocompress option
   % requires cite.sty v4.0 or later (November 2003)
    \usepackage[nocompress]{cite}
+   \usepackage{citesort}
 \else
   % normal IEEE
   % \usepackage{cite}
@@ -968,10 +969,13 @@ HDF5, PLFS, semantic analysis
 % http://www.ctan.org/tex-archive/biblio/bibtex/contrib/doc/
 % The IEEEtran BibTeX style support page is at:
 % http://www.michaelshell.org/tex/ieeetran/bibtex/
-\bibliographystyle{IEEEtran}
+{\scriptsize
+%\bibliographystyle{IEEEtran}
+\bibliographystyle{plain}
 % argument is your BibTeX string definitions and bibliography database(s)
 %\bibliography{IEEEabrv,paper}
 \bibliography{paper}
+}
 %
 % <OR> manually copy in the resultant .bbl file
 % set second argument of \begin to the number of references

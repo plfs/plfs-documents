@@ -1,25 +1,22 @@
 \subsection{HDF5}
-HDF5 is a versatile data model containing complex data objects and metadata, with no limit on the number or size of data objects. 
-Its information set is a collection of datasets, groups, datatype and metadata objects. The main components of HDF5 are briefly described below.
+HDF5 is a versatile data model containing complex data objects and metadata. 
+Its information set is a collection of datasets, groups, datatypes and metadata objects. The data model defines mechanisms for creating associations between various information items. The main components of HDF5 are described below.
 
 File:
 In the HDF5 data model the container of an HDF5 infoset
 is represented by a file. It is a collection of objects and also explains the relationship between them.
-Every file begins with a root group "/", which serves as the "starting-point" in the object hierarchy. An empty file has atleast the root group in it.
+Every file begins with a root group "/", which serves as the "starting-point" in the object hierarchy. 
 
-Datasets:
-HDF5 datasets are objects that represent actual data or content. Datasets are arrays which can have multiple dimensions. A dataset is characterized by a dataspace and a datatype. The dataspace captures the rank (number of dimensions) , and the current and maximum extent in the respective dimensions. The datatype describes the type of its data elements. 
-HDF5 supports ten classes of datatypes including scalar types like integer, floating-point, string, etc. and compound datatypes. 
+Dataset:
+HDF5 datasets are objects that represent actual data or content. Datasets are arrays which can have multiple dimensions. A dataset is characterized by a dataspace and a datatype. The dataspace captures the rank (number of dimensions), and the current and maximum extent in each dimension. The datatype describes the type of its data elements. 
 
-Groups:
-A group is an explicit association between HDF5 objects. It is synonymous with directories in a file system. A group could contain multiple other groups, datasets or datatypes /textit{within} it. 
-Traversing a root group generates a B-tree representation of all objects in the file.
+Group:
+A group is an explicit association between HDF5 objects. It is synonymous with directories in a file system. A group could contain multiple other groups, datasets or datatypes \textit{within} it. 
 
-Attributes:
-Aattributes are used for annotating datasets, groups, and datatype objects. They are datasets themselves, and are /textit{attached} to the existing objects they annotate. 
+Attribute:
+Attributes are used for annotating datasets, groups, and datatype objects. They are datasets themselves, and are \textit{attached} to the existing objects they annotate. 
 
-The above definitions are explained in the example shown in figure ~\ref{hdf5_example}. 
-The file "sample.h5" contains a root group which itself contains a group G1 and two datasets, D1 and D2. Group G1 contains a dataset D3. Attribute A1 is linked to dataset D1. The objects and the relationships between them are represented in a B-tree, which is used internally by HDF5 to index its objects. 
+For example, as shown in figure~\ref{hdf5_example}, the file "Sample.h5" contains the root group which itself contains a group G1 and two datasets, D1 and D2. Group G1 contains a dataset D3. Attribute A1 is linked to dataset D1. The objects and the relationships between them can be represented as a B-tree, which is used internally by HDF5 to index its objects. 
 
 \begin{figure}[!t]
 \centering
@@ -28,23 +25,25 @@ The file "sample.h5" contains a root group which itself contains a group G1 and 
 \label{hdf5_example}
 \end{figure}
 
-HDF5 file format:
-As discussed previously, an HDF5 file is a self-describing format which combines data and metadata~\cite{hdf5_fileformat}. High level objects are stored alongwith metadata that is used to describe various characteristics about the object, alongwith the relationship between various objects. 
-
-Parallel HDF5 (PHDF5):
-HDF5 supports parallelism using MPI. Multiple processes can be used to create and store objects in a file. PHDF5 exports a parallel I/O interface, internally making use of MPI-IO interfaces to perform I/O. 
-Applications typically store multiple objects in a single HDF5 file. However, many popularly used parallel file systems like Lustre, Panasas etc. are known to perform poorly for workloads where multiple processes access a shared file. 
+%Parallel HDF5 (PHDF5):
+%HDF5 supports parallelism using MPI. Multiple processes can be used to access objects in a file. PHDF5 exports a parallel I/O interface, internally making use of MPI-IO. 
+%Applications typically store multiple objects in a single HDF5 file. However, many popularly used parallel file systems like Lustre, Panasas etc. are known to perform poorly for workloads where multiple processes access a shared file. 
 
 Virtual Object Layer (VOL):
-The Virtual Object Layer (VOL) is a new abstraction layer internal to the HDF5 library. It is implemented just below the public API. The VOL intercepts all HDF5 API calls that could potentially access objects in the file and forwards those calls to an “object driver” plugin. The plugins could actually store the objects in variety of ways. A plugin could, for example, have objects be distributed remotely over different platforms, provide a raw mapping of the model to the file system, or even store the data in other file formats (like native netCDF or HDF4 format). The user still gets the same data model where access is done to a single HDF5 “container”; however the plugin object driver translates from what the user sees to how the data is actually stored.
+The Virtual Object Layer (VOL) is a new abstraction layer internal to the HDF5 library~\cite{vol}. It is implemented just below the public API. The VOL exports an interface that allows writing plugins for HDF5, thereby enabling developers to store objects in a format different from the default HDF5 file format (like native netCDF or HDF4 format). Plugin writers provide an implementation for a set of functions that access data on disk. These include functions for file management, dataset creation and access, group creation, to name a few.
 
 \subsection{PLFS}
 PLFS is a middleware virtual file system that converts writes to a shared logical file into writes to multiple physical files. 
 It is situated between the application and the parallel file system responsible for the actual data storage. 
-It transforms an application's N-1 access pattern into an N-N access pattern, where every process participating in I/O writes data to its own, separate file. 
-Thus, it interposes on application I/O and converts its I/O pattern into one that is more suitable for the underlying parallel file system.
-The basic operation of PLFs is as follows. For every logical file, PLFS creates a /texit{container} structure on the underlying parallel file system. 
-This container is a hierarchical directory tree consisting of multiple sub-directories. Multiple processes opening the same logical file for writing get a unique data file within the container. When the processes write to their file, a record identifying the write is appended to an index file shared between all processes. Thus, PLFS maintains sufficient metadata to recreate the shared logical file. A FUSE daemon exports this container structure as a single, logical file to the end-users, thereby keeping the PLFS operations transparent from them. 
-We added a new feature to PLFS called XAttributes (xattrs). Xattrs serve as short metadata stored as key-value pairs.
-All xattrs are stored in a separate directory inside the PLFS container structure. They can be used to store user-defined information about data for easy and fast retrieval, since they are not stored alongwith raw data. 
-We use xattrs to store metadata about HDF5 datasets. For example, the datatype, number of dimensions and their extent are stored as xattrs. 
+It transforms N-1 into N-N, where every process participating in I/O writes data to its own, separate file. 
+The basic operation of PLFS is as follows. For every writer to a logical file, PLFS creates a unique physical file on the underlying parallel file system. 
+It also maintains sufficient metadata to recreate the shared logical file. 
+We added a new feature to PLFS called extendible attributes (Xattrs). Xattrs serve as short, extensible metadata stored as key-value pairs.
+They can be used to store user-defined information about data for easy and fast retrieval. 
+%We use xattrs to store metadata about HDF5 datasets. For example, the datatype, number of dimensions and their extent are stored as xattrs. 
+
+Users can interface with PLFS directly by using the PLFS API or by using an MPI library that has been integrated with PLFS (ad\_plfs layer).  
+
+
+
+
