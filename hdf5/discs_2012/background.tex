@@ -30,7 +30,14 @@ For example, as shown in figure~\ref{hdf5_example}, the file "Sample.h5" contain
 %Applications typically store multiple objects in a single HDF5 file. However, many popularly used parallel file systems like Lustre, Panasas etc. are known to perform poorly for workloads where multiple processes access a shared file. 
 
 Virtual Object Layer (VOL):
-VOL is a new abstraction layer internal to the HDF5 library~\cite{vol}. It is implemented just below the public API. The VOL exports an interface that allows writing plugins for HDF5, thereby enabling developers to store objects in a format different from the default HDF5 file format (like native netCDF or HDF4 format). Plugin writers provide an implementation for a set of functions that access data on disk. These include functions for file management, dataset creation and access, group creation, to name a few.
+VOL is a new abstraction layer internal to the HDF5 library~\cite{vol}. As shown in figure~\ref{hdf5_vol} it is implemented just below the public API. The VOL exports an interface that allows writing plugins for HDF5, thereby enabling developers to store objects in a format different from the default HDF5 file format (like native netCDF or HDF4 format). Plugin writers provide an implementation for a set of functions that access data on disk. These include functions for file management, dataset creation and access, group creation, to name a few.
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=3.5in,height=2.8in]{hdf5_vol}
+\caption{Virtual Object Layer (VOL)}
+\label{hdf5_vol}
+\end{figure}
 
 %\subsection{PLFS}
 PLFS is a middleware virtual file system that converts writes to a shared logical file into writes to multiple physical files. 
@@ -44,6 +51,6 @@ They can be used to store user-defined information about data for easy and fast 
 
 Users can interface with PLFS directly by using the PLFS API or by using its MPI-IO driver (ad\_plfs).  
 
-
-
+As stated before, when multiple processes access a single, shared file, file systems like Lustre are known to exhibit sub-standard I/O performance. PLFS has demonstrated benefits of converting this N-1 access pattern into one where every process writes data to its own physical file and sufficient metadata is maintained to recreate the original file in the correct order of writes issued. 
+Secondly, the data model of HDF5 stores multiple datasets in a single file on disk. As a result, one cannot perform any useful post-processing on individual HDF5 objects. As we shall see, storing objects in a different file format allows us to perform optimizations on individual HDF5 objects without affecting the remaining data in the file.
 
